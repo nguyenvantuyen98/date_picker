@@ -76,9 +76,10 @@ class _CustomScrollState extends State<CustomScroll> {
             nextPosition = currentPosition +
                 widget.textItemList[i].getSize(context).width +
                 20;
-            if (stopPosition > currentPosition && stopPosition < nextPosition) {
+            if (stopPosition >= currentPosition &&
+                stopPosition < nextPosition) {
               double range = (nextPosition - currentPosition);
-              double center = range / 2 + currentPosition;
+              double center = range / 2 + currentPosition - 10;
               double downLine = center - range * 0.6;
               double upLine = center + range * 0.6;
               if (stopPosition < downLine) {
