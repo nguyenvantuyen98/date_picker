@@ -1,4 +1,7 @@
+import 'package:date_picker/custom_scroll.dart';
+import 'package:date_picker/time.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'components/go_arrow_button.dart';
 class PickDate extends StatefulWidget {
@@ -10,7 +13,8 @@ class PickDate extends StatefulWidget {
 }
 
 class _PickDateState extends State<PickDate> {
-  List<String> list=["Today","Tomorrow","Thus1","Fri2","Sat3","Sun4"];
+  Time time=Time();
+  final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,13 +41,13 @@ class _PickDateState extends State<PickDate> {
           children: [
             Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(widget.title,style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    fontSize: 30
+                    fontSize: 40
                   ),),
                   // AnimatedList(
                   //   itemBuilder: (context,item,animation){
@@ -51,17 +55,30 @@ class _PickDateState extends State<PickDate> {
                   //   },
                   // ),
                   Container(
+                    //color: Colors.white,
                     height: 50,
-                    child: NotificationListener(
-                      onNotification: (value){
-                        //print(value);
-                      },
-                      child: ListView.builder(
-                          itemCount: list.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context,index)=>TextItem(text:list[index])
+                    child: CustomScroll(inputText: time.getDayList(), callBack: (index) => (print(index)),)
+                  ),
+                  Container(
+                    //color: Colors.white,
+                      height: 50,
+                      child: CustomScroll(inputText: time.getMonthList(), callBack: (index) => (print(index)),)
+                  ),
+                  Container(
+                    //color: Colors.white,
+                      height: 50,
+                      child: CustomScroll(inputText: time.getHourList(), callBack: (index) => (print(index)),)
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: SvgPicture.asset("assets/icons/btn_plus.svg"),
+                        onPressed: (){
+
+                        },
                       ),
-                    ),
+                      Text("UNTIL", style: TextStyle(color: Colors.white),)
+                    ],
                   )
                 ]
               ),
