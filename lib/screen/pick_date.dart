@@ -15,8 +15,10 @@ class PickDate extends StatefulWidget {
 class _PickDateState extends State<PickDate> {
   Time time=Time();
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
+  bool isVisibleHourList=false;
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -37,7 +39,6 @@ class _PickDateState extends State<PickDate> {
       body: Padding(
         padding: EdgeInsets.only(left:40),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Column(
@@ -57,19 +58,31 @@ class _PickDateState extends State<PickDate> {
                   Container(
                     //color: Colors.white,
                     height: 50,
-                    child: CustomScroll(inputText: time.getDayList(), callBack: (index) => (print(index)),)
+                    child: CustomScroll(inputText: time.getDayList(), callBack: (index) {
+                      print(index);
+                      if(index!=null && index!=0){
+                        setState(() {
+                          isVisibleHourList=true;
+                        });
+                      }else{
+                        setState(() {
+                          isVisibleHourList=false;
+                        });
+                      }
+                    })
                   ),
-                  Container(
-                    //color: Colors.white,
-                      height: 50,
-                      child: CustomScroll(inputText: time.getMonthList(), callBack: (index) => (print(index)),)
-                  ),
-                  Container(
+                  // Container(
+                  //   //color: Colors.white,
+                  //     height: 50,
+                  //     child: CustomScroll(inputText: time.getMonthList(), callBack: (index) => (print(index)),)
+                  // ),
+                  isVisibleHourList ? Container(
                     //color: Colors.white,
                       height: 50,
                       child: CustomScroll(inputText: time.getHourList(), callBack: (index) => (print(index)),)
-                  ),
+                  ):SizedBox(),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
                         icon: SvgPicture.asset("assets/icons/btn_plus.svg"),
