@@ -12,38 +12,44 @@ class PickDate extends StatefulWidget {
   _PickDateState createState() => _PickDateState();
 }
 
-class _PickDateState extends State<PickDate> {
+class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
   Time time = Time();
-  final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
+  List<String> _8hrs=["1hr","2hrs","3hrs","4hrs","5hrs","6hrs","7hrs","8hrs"];
   bool isVisibleHourList = false;
+  bool isVisibleDayList =true;
+  bool isVisibleMonthList=false;
+  bool isVisibleUntileButton =true;
+
+  int _focusHourIndex=0;
+  int _focusDayIndex=0;
+
+    // Animation<Offset> _animation;
+    // AnimationController _controller;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // _controller=AnimationController(
+    //   duration: const Duration(milliseconds: 500),
+    //   vsync: this
+    // );
+    // _animation=Tween<Offset>(
+    //   begin: Offset(-2,0),
+    //   end: Offset(0,0)
+    // ).animate(CurvedAnimation(
+    //   parent: _controller,
+    //   curve: Curves.easeInCubic
+    // ));
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.grey.withOpacity(.6),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.close,
-              color: Colors.grey.withOpacity(.6),
-            ),
-            onPressed: () {},
-          )
-        ],
-      ),
+      appBar: buildAppBar(context),
       body: Padding(
         padding: EdgeInsets.only(left: 40),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Column(
@@ -57,13 +63,13 @@ class _PickDateState extends State<PickDate> {
                           color: Colors.white,
                           fontSize: 40),
                     ),
-                    Container(
+                    isVisibleDayList ? Container(
                         //color: Colors.white,
                         height: 50,
                         child: CustomScroll(
                             inputText: time.getDayList(),
                             callBack: (index) {
-                              print(index);
+                              _focusDayIndex=index;
                               if (index != null && index != 0) {
                                 setState(() {
                                   isVisibleHourList = true;
@@ -73,14 +79,13 @@ class _PickDateState extends State<PickDate> {
                                   isVisibleHourList = false;
                                 });
                               }
-                            })),
-                    // Container(
-                    //   //color: Colors.white,
-                    //     height: 50,
-                    //     child: CustomScroll(inputText: time.getMonthList(), callBack: (index) => (print(index)),)
-                    // ),
-                    isVisibleHourList
-                        ? Container(
+                            })): SizedBox(),
+                    isVisibleMonthList ? Container(
+                      //color: Colors.white,
+                        height: 50,
+                        child: CustomScroll(inputText: time.getMonthList(), callBack: (index) => (print(index)),)
+                    ):SizedBox(),
+                    isVisibleHourList ? Container(
                             //color: Colors.white,
                             height: 50,
                             child: CustomScroll(
@@ -88,18 +93,39 @@ class _PickDateState extends State<PickDate> {
                               callBack: (index) => (print(index)),
                             ))
                         : SizedBox(),
-                    Row(
+                    isVisibleUntileButton ? Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         IconButton(
                           icon: SvgPicture.asset("assets/icons/btn_plus.svg"),
-                          onPressed: () {},
+                          onPressed: () {
+                            print(_focusDayIndex);
+                            if(_focusDayIndex==0){
+                              setState(() {
+                                isVisibleDayList=false;
+                                isVisibleUntileButton =false;
+                              });
+                            }else{
+
+                            }
+                          },
                         ),
                         Text(
                           "UNTIL",
                           style: TextStyle(color: Colors.white),
                         )
                       ],
+                    ):SizedBox(),
+                    isVisibleDayList ? SizedBox() : Text("Now for", style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 40)
+                    ),
+                    isVisibleDayList ? SizedBox(): Container(
+                      height: 50,
+                      child: CustomScroll(inputText: _8hrs, callBack: (index){
+                        //print(index);
+                      },),
                     )
                   ]),
             ),
@@ -116,24 +142,28 @@ class _PickDateState extends State<PickDate> {
       ),
     );
   }
-}
 
-class TextItem extends StatelessWidget {
-  const TextItem({
-    Key key,
-    this.text,
-  }) : super(key: key);
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(right: 20),
-      child: Text(
-        text,
-        style: TextStyle(
-            color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
-      ),
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.grey.withOpacity(.6),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.close,
+            color: Colors.grey.withOpacity(.6),
+          ),
+          onPressed: () {},
+        )
+      ],
     );
   }
 }
