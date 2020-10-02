@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class TextItem {
   final String text;
   TextStyle textStyle;
-  bool isFocus;
   TextItem(
       {this.text,
       this.textStyle = const TextStyle(
-          fontSize: 40, fontWeight: FontWeight.bold, color: Color(0xFF232323)),
-      this.isFocus = false});
+          fontSize: 40,
+          fontWeight: FontWeight.bold,
+          color: Color(0xFF232323))});
   Size getSize(BuildContext context) {
     return (TextPainter(
             text: TextSpan(
@@ -22,7 +22,7 @@ class TextItem {
         .size;
   }
 
-  TextItemWidget get buildItem {
+  TextItemWidget buildItem(bool isFocus) {
     return TextItemWidget(
       text: text,
       isFocus: isFocus,

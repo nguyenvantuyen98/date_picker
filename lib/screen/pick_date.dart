@@ -68,10 +68,14 @@ class _PickDateState extends State<PickDate> {
                         child: CustomScroll(
                             inputText: time.getDayList(),
                             callBack: (index) {
-                              print('dayList: $index');
+                              print(index);
                               if (index != null && index != 0) {
                                 setState(() {
                                   isVisibleHourList = true;
+                                });
+                              } else {
+                                setState(() {
+                                  isVisibleHourList = false;
                                 });
                               }
                             })),
@@ -86,7 +90,7 @@ class _PickDateState extends State<PickDate> {
                             height: 50,
                             child: CustomScroll(
                               inputText: time.getHourList(),
-                              callBack: (index) => (print('HourList: $index')),
+                              callBack: (index) => (print(index)),
                             ))
                         : SizedBox(),
                     Row(

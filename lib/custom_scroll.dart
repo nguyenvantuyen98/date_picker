@@ -8,7 +8,6 @@ class CustomScroll extends StatefulWidget {
   final List<String> inputText;
   final List<TextItem> textItemList = [];
   CustomScroll({this.inputText, this.callBack}) {
-    print('restart');
     for (String text in inputText) {
       textItemList.add(TextItem(text: text));
     }
@@ -21,6 +20,45 @@ class CustomScroll extends StatefulWidget {
 class _CustomScrollState extends State<CustomScroll> {
   ScrollController scrollController = ScrollController();
   int focus = 0;
+  @override
+  void initState() {
+    scrollController = ScrollController();
+    scrollController.addListener(_scrollListener);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return NotificationListener(
+      child: ListView.builder(
+        controller: scrollController,
+        scrollDirection: Axis.horizontal,
+        itemCount: widget.textItemList.length + 1,
+        itemBuilder: (context, index) {
+          return index < widget.textItemList.length
+              ? GestureDetector(
+                  child: index == focus
+                      ? widget.textItemList[index].buildItem(true)
+                      : widget.textItemList[index].buildItem(false),
+                  onTap: () => focusOn(index),
+                )
+              : SizedBox(
+                  width: MediaQuery.of(context).size.width -
+                      widget.textItemList[widget.textItemList.length - 1]
+                          .getSize(context)
+                          .width);
+        },
+      ),
+      onNotification: (notification) {
+        if (notification is ScrollEndNotification) {
+          double stopPosition = notification.metrics.pixels;
+          int index = getIndex(stopPosition);
+          focusOn(index);
+        }
+        return true;
+      },
+    );
+  }
 
   _scrollListener() {
     int index = getIndex(scrollController.position.pixels);
@@ -42,72 +80,8 @@ class _CustomScrollState extends State<CustomScroll> {
     return index;
   }
 
-  @override
-  void initState() {
-    scrollController = ScrollController();
-    scrollController.addListener(_scrollListener);
-    widget.textItemList[0].isFocus = true;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return NotificationListener(
-      child: ListView.builder(
-        controller: scrollController,
-        scrollDirection: Axis.horizontal,
-        itemCount: widget.textItemList.length + 1,
-        itemBuilder: (context, index) {
-          return index < widget.textItemList.length
-              ? GestureDetector(
-                  child: widget.textItemList[index].buildItem,
-                  onTap: () => focusOn(index),
-                )
-              : SizedBox(
-                  width: MediaQuery.of(context).size.width -
-                      widget.textItemList[widget.textItemList.length - 1]
-                          .getSize(context)
-                          .width);
-        },
-      ),
-      onNotification: (notification) {
-        if (notification is ScrollEndNotification) {
-          double stopPosition = notification.metrics.pixels;
-          double currentPosition = 0.0;
-          double nextPosition = 0.0;
-          for (int i = 0; i < widget.textItemList.length; i++) {
-            currentPosition = nextPosition;
-            nextPosition = currentPosition +
-                widget.textItemList[i].getSize(context).width +
-                20;
-            if (stopPosition >= currentPosition &&
-                stopPosition < nextPosition) {
-              double range = (nextPosition - currentPosition);
-              double center = range / 2 + currentPosition - 10;
-              double downLine = center - range * 0.6;
-              double upLine = center + range * 0.6;
-              if (stopPosition < downLine) {
-                _animateScroll(currentPosition -
-                    widget.textItemList[i].getSize(context).width +
-                    20);
-              } else if (stopPosition > upLine) {
-                _animateScroll(nextPosition);
-              } else {
-                _animateScroll(currentPosition);
-              }
-              break;
-            }
-          }
-        }
-        return true;
-      },
-    );
-  }
-
   void lightUp(int index) {
     setState(() {
-      widget.textItemList[index].isFocus = true;
-      widget.textItemList[focus].isFocus = false;
       focus = index;
     });
     widget.callBack(index);
@@ -125,7 +99,7 @@ class _CustomScrollState extends State<CustomScroll> {
     Future.delayed(Duration.zero, () {
       scrollController.animateTo(
         location,
-        duration: new Duration(milliseconds: 500),
+        duration: new Duration(milliseconds: 200),
         curve: Curves.ease,
       );
     });
