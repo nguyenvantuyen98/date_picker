@@ -9,7 +9,6 @@ class Time {
     ];
     // Duration difference = DateTime(now.year + 1, now.month, now.day).difference(now);
     Duration difference = DateTime(now.year + 1, 1, 1).difference(now);
-    print(difference.inDays);
     for (int i = 2; i <= difference.inDays; i++) {
       String nextDay = formatDay(now.add(Duration(days: i)));
       inputText.add(nextDay);
