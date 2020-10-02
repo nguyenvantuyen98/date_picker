@@ -28,7 +28,7 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
   bool isVisibleHourList = false;
   bool isVisibleDayList = true;
   bool isVisibleMonthList = false;
-  bool isVisibleUntileButton = true;
+  bool isVisibleUntilButton = true;
 
   int _focusHourIndex = 0;
   int _focusDayIndex = 0;
@@ -50,109 +50,121 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.title,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 40),
-                    ),
-                    isVisibleDayList
-                        ? Container(
-                            height: 50,
-                            child: CustomScroll(
-                                inputText: time.getDayList(),
-                                callBack: (index) {
-                                  _focusDayIndex = index;
-                                  if (index != null && index != 0) {
-                                    setState(() {
-                                      isVisibleHourList = true;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      isVisibleHourList = false;
-                                    });
-                                  }
-                                }))
-                        : SizedBox(),
-                    isVisibleMonthList
-                        ? Container(
-                            //color: Colors.white,
-                            height: 50,
-                            child: CustomScroll(
-                              inputText: time.getMonthList(),
-                              callBack: (index) => (print(index)),
-                            ))
-                        : SizedBox(),
-                    isVisibleHourList
-                        ? Container(
-                            //color: Colors.white,
-                            height: 50,
-                            child: CustomScroll(
-                              inputText: time.getMonthList(),
-                              callBack: (index) => (print(index)),
-                            ))
-                        : SizedBox(),
-                    AnimatedSwitcher(
-                      duration: Duration(milliseconds: 300),
-                      child: isVisibleHourList
-                          ? Container(
-                              //color: Colors.white,
-                              height: 50,
-                              child: CustomScroll(
-                                inputText: time.getHourList(),
-                                callBack: (index) => (print(index)),
-                              ))
-                          : SizedBox(),
-                    ),
-                    isVisibleUntileButton
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              IconButton(
-                                icon: SvgPicture.asset(
-                                    "assets/icons/btn_plus.svg"),
-                                onPressed: () {
-                                  print(_focusDayIndex);
-                                  if (_focusDayIndex == 0) {
-                                    setState(() {
-                                      isVisibleDayList = false;
-                                      isVisibleUntileButton = false;
-                                    });
-                                  } else {}
-                                },
-                              ),
-                              Text(
-                                "UNTIL",
-                                style: TextStyle(color: Colors.white),
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.title,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 40),
+                        ),
+                        isVisibleDayList
+                            ? Container(
+                                height: 50,
+                                child: CustomScroll(
+                                    inputText: time.getDayList(),
+                                    callBack: (index) {
+                                      _focusDayIndex = index;
+                                      //Visible hour list
+                                      setState(() {
+                                        if (_focusDayIndex != null &&
+                                            _focusDayIndex != 0) {
+                                          isVisibleHourList = true;
+                                        } else {
+                                          isVisibleHourList = false;
+                                        }
+                                      });
+                                      //Visible month list
+                                      setState(() {
+                                        if (_focusDayIndex > 2) {
+                                          isVisibleMonthList = true;
+                                        } else {
+                                          isVisibleMonthList = false;
+                                        }
+                                      });
+                                    }))
+                            : SizedBox(),
+                        AnimatedSwitcher(
+                          duration: Duration(milliseconds: 300),
+                          child: isVisibleMonthList
+                              ? Container(
+                                  //color: Colors.white,
+                                  height: 50,
+                                  child: CustomScroll(
+                                    inputText: time.getMonthList(),
+                                    callBack: (index) => (print(index)),
+                                  ))
+                              : SizedBox(),
+                        ),
+                        AnimatedSwitcher(
+                          duration: Duration(milliseconds: 300),
+                          child: isVisibleHourList
+                              ? Container(
+                                  //color: Colors.white,
+                                  height: 50,
+                                  child: CustomScroll(
+                                    inputText: time.getHourList(),
+                                    callBack: (index) => (print(index)),
+                                  ))
+                              : SizedBox(),
+                        ),
+                        isVisibleUntilButton
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  IconButton(
+                                    icon: SvgPicture.asset(
+                                        "assets/icons/btn_plus.svg"),
+                                    onPressed: () {
+                                      print(_focusDayIndex);
+                                      setState(() {
+                                        if (_focusDayIndex == 0) {
+                                          isVisibleDayList = false;
+                                          isVisibleUntilButton = false;
+                                        } else {}
+                                      });
+                                    },
+                                  ),
+                                  Text(
+                                    "UNTIL",
+                                    style: TextStyle(color: Colors.white),
+                                  )
+                                ],
                               )
-                            ],
-                          )
-                        : SizedBox(),
-                    isVisibleDayList
-                        ? SizedBox()
-                        : Text("Now for",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 40)),
-                    isVisibleDayList
-                        ? SizedBox()
-                        : Container(
-                            height: 50,
-                            child: CustomScroll(
-                              inputText: _8hrs,
-                              callBack: (index) {},
-                            ),
-                          )
-                  ]),
+                            : SizedBox(),
+                        AnimatedSwitcher(
+                          duration: Duration(milliseconds: 300),
+                          child: isVisibleDayList
+                              ? SizedBox()
+                              : Text("Now for",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 40)),
+                        ),
+                        AnimatedSwitcher(
+                          duration: Duration(milliseconds: 300),
+                          child: isVisibleDayList
+                              ? SizedBox()
+                              : Container(
+                                  height: 50,
+                                  child: CustomScroll(
+                                    inputText: _8hrs,
+                                    callBack: (index) {},
+                                  ),
+                                ),
+                        ),
+                      ]),
+                ),
+              ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * .2,
+              height: MediaQuery.of(context).size.height * .3,
               child: Center(
                 child: GoArrowButton(
                   press: () {},
