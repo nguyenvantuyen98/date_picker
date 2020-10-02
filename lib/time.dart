@@ -32,19 +32,21 @@ class Time {
     }
     return inputText;
   }
-  List<String> getMonthList(){
-    List<String> inputText=[];
-    for(int i=DateTime.now().month;i<=12;i++){
+
+  List<String> getMonthList() {
+    List<String> inputText = [];
+    for (int i = DateTime.now().month; i <= 12; i++) {
       inputText.add(getMonth2(i));
     }
     return inputText;
   }
+
   String formatDay(DateTime dateTime) {
     return '${getWeekDay(dateTime)}${dateTime.day}';
   }
 
   String formatTime(DateTime dateTime) {
-    String hours = '${dateTime.hour}'.padRight(2, '0');
+    String hours = '${dateTime.hour}'.padLeft(2, '0');
     String minutes = '${dateTime.minute}'.padLeft(2, '0');
     return '$hours:$minutes';
   }
@@ -75,6 +77,7 @@ class Time {
     if (dateTime.month == 12) return 'Dec';
     return '';
   }
+
   String getMonth2(int month) {
     if (month == 1) return 'Jan';
     if (month == 2) return 'Feb';
@@ -90,6 +93,7 @@ class Time {
     if (month == 12) return 'Dec';
     return '';
   }
+
   DateTime roundTimeEach15Minutes() {
     DateTime now = DateTime.now();
     if (now.minute == 0 ||

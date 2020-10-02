@@ -8,6 +8,7 @@ class CustomScroll extends StatefulWidget {
   final List<String> inputText;
   final List<TextItem> textItemList = [];
   CustomScroll({this.inputText, this.callBack}) {
+    print('restart');
     for (String text in inputText) {
       textItemList.add(TextItem(text: text));
     }
@@ -55,12 +56,18 @@ class _CustomScrollState extends State<CustomScroll> {
       child: ListView.builder(
         controller: scrollController,
         scrollDirection: Axis.horizontal,
-        itemCount: widget.textItemList.length,
+        itemCount: widget.textItemList.length + 1,
         itemBuilder: (context, index) {
-          return GestureDetector(
-            child: widget.textItemList[index].buildItem,
-            onTap: () => focusOn(index),
-          );
+          return index < widget.textItemList.length
+              ? GestureDetector(
+                  child: widget.textItemList[index].buildItem,
+                  onTap: () => focusOn(index),
+                )
+              : SizedBox(
+                  width: MediaQuery.of(context).size.width -
+                      widget.textItemList[widget.textItemList.length - 1]
+                          .getSize(context)
+                          .width);
         },
       ),
       onNotification: (notification) {
@@ -98,7 +105,6 @@ class _CustomScrollState extends State<CustomScroll> {
   }
 
   void lightUp(int index) {
-    assert(focus != index);
     setState(() {
       widget.textItemList[index].isFocus = true;
       widget.textItemList[focus].isFocus = false;
