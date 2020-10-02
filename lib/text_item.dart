@@ -7,7 +7,7 @@ class TextItem {
   TextItem(
       {this.text,
       this.textStyle = const TextStyle(
-          fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black),
+          fontSize: 40, fontWeight: FontWeight.bold, color: Color(0xFF232323)),
       this.isFocus = false});
   Size getSize(BuildContext context) {
     return (TextPainter(

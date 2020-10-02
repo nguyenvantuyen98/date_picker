@@ -48,13 +48,10 @@ class _AddTitleState extends State<AddTitle> {
                           duration: Duration(milliseconds: 500),
                           curve: Curves.decelerate,
                           opacity: _currentGreetingOpacity,
-                          child: Text(
-                            "Hey,\nCuong",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold),
-                          ),
+                          child: Text("Hey,\nBoy", style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 40, fontWeight: FontWeight.bold
+                          ),),
                         ),
                         TextField(
                           onTap: () {
