@@ -41,6 +41,7 @@ class _CustomScrollState extends State<CustomScroll> {
                       ? widget.textItemList[index].buildItem(true)
                       : widget.textItemList[index].buildItem(false),
                   onTap: () => focusOn(index),
+                  onDoubleTap: () => focusOn(index),
                 )
               : SizedBox(
                   width: MediaQuery.of(context).size.width -
@@ -99,7 +100,7 @@ class _CustomScrollState extends State<CustomScroll> {
     Future.delayed(Duration.zero, () {
       scrollController.animateTo(
         location,
-        duration: new Duration(milliseconds: 200),
+        duration: new Duration(milliseconds: 300),
         curve: Curves.ease,
       );
     });
