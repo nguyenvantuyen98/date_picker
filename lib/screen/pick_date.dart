@@ -63,7 +63,6 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                     ),
                     isVisibleDayList
                         ? Container(
-                            //color: Colors.red,
                             height: 50,
                             child: CustomScroll(
                                 inputText: time.getDayList(),
@@ -81,6 +80,15 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                                 }))
                         : SizedBox(),
                     isVisibleMonthList
+                        ? Container(
+                            //color: Colors.white,
+                            height: 50,
+                            child: CustomScroll(
+                              inputText: time.getMonthList(),
+                              callBack: (index) => (print(index)),
+                            ))
+                        : SizedBox(),
+                    isVisibleHourList
                         ? Container(
                             //color: Colors.white,
                             height: 50,

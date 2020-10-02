@@ -2,29 +2,39 @@ import 'package:date_picker/text_item.dart';
 import 'package:flutter/material.dart';
 
 typedef void IndexCallBack(int index);
+typedef int JumpToCallBack();
 
 class CustomScroll extends StatefulWidget {
-  final IndexCallBack callBack;
+  final int focusOn;
   final List<String> inputText;
+  final IndexCallBack callBack;
   final List<TextItem> textItemList = [];
-  CustomScroll({this.inputText, this.callBack}) {
+  CustomScroll({this.focusOn, this.inputText, this.callBack, Key key})
+      : super(key: key) {
     for (String text in inputText) {
       textItemList.add(TextItem(text: text));
     }
   }
 
   @override
-  _CustomScrollState createState() => _CustomScrollState();
+  CustomScrollState createState() => CustomScrollState();
 }
 
-class _CustomScrollState extends State<CustomScroll> {
+class CustomScrollState extends State<CustomScroll> {
   ScrollController scrollController = ScrollController();
   int focus = 0;
+
   @override
   void initState() {
     scrollController = ScrollController();
     scrollController.addListener(_scrollListener);
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.focusOn != null && widget.focusOn < widget.inputText.length) {
+        focus = widget.focusOn;
+        focusOn(focus);
+      }
+    });
   }
 
   @override
@@ -100,7 +110,7 @@ class _CustomScrollState extends State<CustomScroll> {
     Future.delayed(Duration.zero, () {
       scrollController.animateTo(
         location,
-        duration: new Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 300),
         curve: Curves.ease,
       );
     });

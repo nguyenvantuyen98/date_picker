@@ -36,7 +36,7 @@ class Time {
   List<String> getMonthList() {
     List<String> inputText = [];
     for (int i = DateTime.now().month; i <= 12; i++) {
-      inputText.add(getMonth2(i));
+      inputText.add(getMonth(i));
     }
     return inputText;
   }
@@ -62,23 +62,7 @@ class Time {
     return '';
   }
 
-  String getMonth(DateTime dateTime) {
-    if (dateTime.month == 1) return 'Jan';
-    if (dateTime.month == 2) return 'Feb';
-    if (dateTime.month == 3) return 'Mar';
-    if (dateTime.month == 4) return 'Apr';
-    if (dateTime.month == 5) return 'May';
-    if (dateTime.month == 6) return 'Jun';
-    if (dateTime.month == 7) return 'Jul';
-    if (dateTime.month == 8) return 'Aug';
-    if (dateTime.month == 9) return 'Sep';
-    if (dateTime.month == 10) return 'Oct';
-    if (dateTime.month == 11) return 'Nov';
-    if (dateTime.month == 12) return 'Dec';
-    return '';
-  }
-
-  String getMonth2(int month) {
+  String getMonth(int month) {
     if (month == 1) return 'Jan';
     if (month == 2) return 'Feb';
     if (month == 3) return 'Mar';
