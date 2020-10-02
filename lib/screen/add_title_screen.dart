@@ -45,10 +45,19 @@ class _AddTitleState extends State<AddTitle> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         AnimatedOpacity(
-                          duration: Duration(milliseconds: 500),
+                          duration: Duration(milliseconds: 200),
                           curve: Curves.decelerate,
                           opacity: _currentGreetingOpacity,
-                          child: Text("Hey,\nBoy", style: TextStyle(
+                          child: Text("Hey,", style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 40, fontWeight: FontWeight.bold
+                          ),),
+                        ),
+                        AnimatedOpacity(
+                          duration: Duration(milliseconds: 350),
+                          curve: Curves.decelerate,
+                          opacity: _currentGreetingOpacity,
+                          child: Text("Boy", style: TextStyle(
                               color: Colors.white,
                               fontSize: 40, fontWeight: FontWeight.bold
                           ),),

@@ -57,11 +57,6 @@ class _PickDateState extends State<PickDate> {
                           color: Colors.white,
                           fontSize: 40),
                     ),
-                    // AnimatedList(
-                    //   itemBuilder: (context,item,animation){
-                    //
-                    //   },
-                    // ),
                     Container(
                         //color: Colors.white,
                         height: 50,
