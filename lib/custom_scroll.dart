@@ -22,26 +22,23 @@ class _CustomScrollState extends State<CustomScroll> {
   int focus = 0;
 
   _scrollListener() {
-    double position = scrollController.position.pixels;
-    double currentPosition = 0.0;
-    double nextPosition = 0.0;
-    for (int i = 0; i < widget.textItemList.length; i++) {
-      currentPosition = nextPosition;
-      nextPosition =
-          currentPosition + widget.textItemList[i].getSize(context).width + 20;
-      if (position > currentPosition && position < nextPosition) {
-        if (i != focus) {
-          setState(
-            () {
-              widget.textItemList[focus].isFocus = false;
-              widget.textItemList[i].isFocus = true;
-              focus = i;
-              widget.callBack(focus);
-            },
-          );
-        }
-      }
+    int index = getIndex(scrollController.position.pixels);
+    if (focus != index) {
+      lightUp(index);
     }
+  }
+
+  int getIndex(double position) {
+    double currentPosition = 0.0;
+    int index = 0;
+    while (position > currentPosition) {
+      currentPosition += widget.textItemList[index].getSize(context).width + 20;
+      if (position < currentPosition) {
+        break;
+      }
+      index += 1;
+    }
+    return index;
   }
 
   @override
@@ -98,6 +95,16 @@ class _CustomScrollState extends State<CustomScroll> {
         return true;
       },
     );
+  }
+
+  void lightUp(int index) {
+    assert(focus != index);
+    setState(() {
+      widget.textItemList[index].isFocus = true;
+      widget.textItemList[focus].isFocus = false;
+      focus = index;
+    });
+    widget.callBack(index);
   }
 
   void focusOn(int index) {

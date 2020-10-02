@@ -22,7 +22,22 @@ class TextItem {
         .size;
   }
 
-  Container get buildItem {
+  TextItemWidget get buildItem {
+    return TextItemWidget(
+      text: text,
+      isFocus: isFocus,
+      textStyle: textStyle,
+    );
+  }
+}
+
+class TextItemWidget extends StatelessWidget {
+  final String text;
+  final bool isFocus;
+  final TextStyle textStyle;
+  TextItemWidget({this.text, this.isFocus, this.textStyle});
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(right: 20),
       child: Text(
