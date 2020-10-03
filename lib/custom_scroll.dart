@@ -60,9 +60,6 @@ class CustomScrollState extends State<CustomScroll> {
         },
       ),
       onNotification: (notification) {
-        if (notification is ScrollUpdateNotification) {
-          //print('onUpdate ${notification.metrics}');
-        }
         if (notification is ScrollEndNotification) {
           double stopPosition = notification.metrics.pixels;
           int index = getIndex(stopPosition);

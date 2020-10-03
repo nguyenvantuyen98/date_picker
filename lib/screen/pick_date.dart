@@ -16,7 +16,7 @@ class PickDate extends StatefulWidget {
 class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
   Time time = Time();
 
-  List<String> _8hrs = [
+  List<String> hoursList = [
     "1hr",
     "2hrs",
     "3hrs",
@@ -46,7 +46,6 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -207,7 +206,7 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                           : Container(
                               height: 50,
                               child: CustomScroll(
-                                inputText: _8hrs,
+                                inputText: hoursList,
                                 callBack: (index) {},
                               ),
                             ),
