@@ -46,6 +46,7 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
   }
 
@@ -76,7 +77,7 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
     for (int i = _focusStartHourIndex; i < time.getHourList().length; i++) {
       endHourList.add(time.getHourList()[i]);
     }
-    for (int i = _focusStartHourIndex; i < time.getHourList().length; i++) {
+    for (int i = _focusStartMonthIndex; i < time.getMonthList().length; i++) {
       endMonthList.add(time.getMonthList()[i]);
     }
   }
@@ -99,7 +100,7 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
           } else {
             isVisibleEndDayList = true;
             isVisibleEndHourList = true;
-            isVisibleEndHourList = true;
+            isVisibleEndMonthList = true;
           }
         } else {
           isVisibleEndDayList = false;
@@ -267,27 +268,30 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                               //color: Colors.white,
                               height: 50,
                               child: CustomScroll(
-                                  inputText: endHourList, callBack: (index) {}))
+                                  inputText: endHourList,
+                                  callBack: (index) {
+                                    print(index);
+                                  }))
                           : SizedBox(),
                     ),
                   ]),
-                  Positioned(
-                    right: 0,
-                    left: 0,
-                    bottom: 0,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * .15,
-                      decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.transparent,
-                                Colors.white,
-                              ])),
-                    ),
-                  ),
+                  // Positioned(
+                  //   right: 0,
+                  //   left: 0,
+                  //   bottom: 0,
+                  //   child: Container(
+                  //     height: MediaQuery.of(context).size.height * .15,
+                  //     decoration: BoxDecoration(
+                  //         color: Colors.transparent,
+                  //         gradient: LinearGradient(
+                  //             begin: Alignment.topCenter,
+                  //             end: Alignment.bottomCenter,
+                  //             colors: [
+                  //               Colors.transparent,
+                  //               Colors.white,
+                  //             ])),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
