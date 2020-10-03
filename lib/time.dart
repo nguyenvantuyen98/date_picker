@@ -1,23 +1,38 @@
 class Time {
   DateTime now = DateTime.now();
 
-  List<String> getDayList() {
-    List<String> inputText = [
+  List<String> getMonthList() {
+    List<String> monthStringList = [];
+    for (int i = DateTime.now().month; i <= 12; i++) {
+      monthStringList.add(getMonth(i));
+    }
+    return monthStringList;
+  }
+
+  Map getDayList() {
+    List<String> dayStringList = [
       'Now',
       'Today',
       'Tomorrow',
     ];
+    List<int> linkToMonthList = [
+      now.month,
+      now.month,
+      now.add(Duration(days: 1)).month,
+    ];
+
     // Duration difference = DateTime(now.year + 1, now.month, now.day).difference(now);
     Duration difference = DateTime(now.year + 1, 1, 1).difference(now);
     for (int i = 2; i <= difference.inDays; i++) {
-      String nextDay = formatDay(now.add(Duration(days: i)));
-      inputText.add(nextDay);
+      DateTime nextDay = now.add(Duration(days: i));
+      dayStringList.add(formatDay(nextDay));
+      linkToMonthList.add(nextDay.month);
     }
-    return inputText;
+    return {'dayStringList': dayStringList, 'linkToMonthList': linkToMonthList};
   }
 
   List<String> getHourList() {
-    List<String> inputText = [
+    List<String> hourStringList = [
       'Anytime',
       'Morning',
       'Afternoon',
@@ -27,18 +42,10 @@ class Time {
 
     DateTime roundedTime = roundTimeEach15Minutes();
     while (roundedTime.day == now.day) {
-      inputText.add(formatTime(roundedTime));
+      hourStringList.add(formatTime(roundedTime));
       roundedTime = roundedTime.add(Duration(minutes: 15));
     }
-    return inputText;
-  }
-
-  List<String> getMonthList() {
-    List<String> inputText = [];
-    for (int i = DateTime.now().month; i <= 12; i++) {
-      inputText.add(getMonth(i));
-    }
-    return inputText;
+    return hourStringList;
   }
 
   String formatDay(DateTime dateTime) {
@@ -90,5 +97,3 @@ class Time {
     return now.add(Duration(minutes: 60 - now.minute));
   }
 }
-
-final Time time = Time();
