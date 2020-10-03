@@ -2,7 +2,6 @@ import 'package:date_picker/text_item.dart';
 import 'package:flutter/material.dart';
 
 typedef void IndexCallBack(int index);
-typedef int JumpToCallBack();
 
 class CustomScroll extends StatefulWidget {
   final int focusOn;
@@ -61,6 +60,9 @@ class CustomScrollState extends State<CustomScroll> {
         },
       ),
       onNotification: (notification) {
+        if (notification is ScrollUpdateNotification) {
+          //print('onUpdate ${notification.metrics}');
+        }
         if (notification is ScrollEndNotification) {
           double stopPosition = notification.metrics.pixels;
           int index = getIndex(stopPosition);
@@ -106,11 +108,21 @@ class CustomScrollState extends State<CustomScroll> {
     _animateScroll(location);
   }
 
-  void _animateScroll(double location) {
+  void quickFocusOn(int index) {
+    double location = 0.0;
+    for (int i = 0; i < index; i++) {
+      location += widget.textItemList[i].getSize(context).width + 20;
+    }
+    _animateScroll(location, true);
+  }
+
+  void _animateScroll(double location, [bool quickScroll = false]) {
     Future.delayed(Duration.zero, () {
       scrollController.animateTo(
         location,
-        duration: Duration(milliseconds: 300),
+        duration: quickScroll
+            ? Duration(microseconds: 10)
+            : Duration(milliseconds: 300),
         curve: Curves.ease,
       );
     });
