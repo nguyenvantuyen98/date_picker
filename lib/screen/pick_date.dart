@@ -8,12 +8,12 @@ import 'components/go_arrow_button.dart';
 class PickDate extends StatefulWidget {
   final String title;
 
-  const PickDate({Key key, this.title = "Hello World"}) : super(key: key);
+  const PickDate({Key key, this.title}) : super(key: key);
   @override
   _PickDateState createState() => _PickDateState();
 }
 
-class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
+class _PickDateState extends State<PickDate> {
   Time time = Time();
 
   List<String> startDayList;
@@ -146,19 +146,17 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                       Container(
                         height: MediaQuery.of(context).size.height * .13,
                       ),
-                      SizedBox(
-                        height: 60,
-                        child: Text(
-                          widget.title,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 40),
-                        ),
+                      Text(
+                        widget.title,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 40),
                       ),
                       isVisibleStartDayList
                           ? Container(
                               height: 60,
+                              margin: EdgeInsets.only(top: 40),
                               child: CustomScroll(
                                   inputText: startDayList,
                                   key: startDayKey,
@@ -299,6 +297,7 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                                   inputText: endMonthList,
                                   key: endMonthKey,
                                   callBack: (index) {
+                                    _focusEndMonthIndex = index;
                                     currentMonthInEndMonthList =
                                         13 - endMonthList.length + index;
                                     if (currentMonthInEndMonthList !=
@@ -320,7 +319,7 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                                 child: CustomScroll(
                                     inputText: endHourList,
                                     callBack: (index) {
-                                      print(index);
+                                      _focusEndHourIndex = index;
                                     }))
                             : SizedBox(),
                       ),
