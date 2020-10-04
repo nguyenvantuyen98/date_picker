@@ -32,15 +32,36 @@ class Time {
   }
 
   List<String> getHourList() {
-    List<String> hourStringList = [
-      'Anytime',
-      'Morning',
-      'Afternoon',
-      'Evening',
-      'Night',
-    ];
+    List<String> hourStringList;
 
     DateTime roundedTime = roundTimeEach15Minutes();
+    if (roundedTime.hour < 12)
+      hourStringList = [
+        'Anytime',
+        'Morning',
+        'Afternoon',
+        'Evening',
+        'Night',
+      ];
+    else if (roundedTime.hour < 17)
+      hourStringList = [
+        'Anytime',
+        'Afternoon',
+        'Evening',
+        'Night',
+      ];
+    else if (roundedTime.hour < 21)
+      hourStringList = [
+        'Anytime',
+        'Evening',
+        'Night',
+      ];
+    else
+      hourStringList = [
+        'Anytime',
+        'Night',
+      ];
+
     while (roundedTime.day == now.day) {
       hourStringList.add(formatTime(roundedTime));
       roundedTime = roundedTime.add(Duration(minutes: 15));

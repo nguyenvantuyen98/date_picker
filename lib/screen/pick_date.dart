@@ -403,7 +403,7 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
             color: Colors.grey.withOpacity(.6),
           ),
           onPressed: () {
-            Navigator.pop(context);
+            isVisibleEndDayList ? _handleUntilButton() : Navigator.pop(context);
           },
         ),
         IconButton(
