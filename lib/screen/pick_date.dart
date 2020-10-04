@@ -2,6 +2,7 @@ import 'package:date_picker/custom_scroll.dart';
 import 'package:date_picker/time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import 'components/go_arrow_button.dart';
 
 class PickDate extends StatefulWidget {
@@ -53,6 +54,10 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
   int _focusStartDayIndex = 0;
   int _focusStartMonthIndex = 0;
 
+  int _focusEndHourIndex = 0;
+  int _focusEndDayIndex = 0;
+  int _focusEndMonthIndex = 0;
+
   _handleVisibleStartTimeList() {
     setState(() {
       if (_focusStartDayIndex != null && _focusStartDayIndex != 0) {
@@ -64,6 +69,18 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
         isVisibleStartMonthList = true;
       } else {
         isVisibleStartMonthList = false;
+      }
+    });
+  }
+
+  _handleVisibleMonthList() {
+    setState(() {
+      if (endDayList[_focusEndDayIndex] == "Today" && _focusEndDayIndex == 0 ||
+          endDayList[_focusEndDayIndex] == "Tomorrow" &&
+              _focusEndDayIndex == 1) {
+        isVisibleEndMonthList = false;
+      } else {
+        isVisibleEndMonthList = true;
       }
     });
   }
@@ -258,8 +275,8 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                                     inputText: endDayList,
                                     key: endDayKey,
                                     callBack: (index) {
-                                      // _focusDayIndex = index;
-                                      // _handleVisibleStartTimeList();
+                                      _focusEndDayIndex = index;
+                                      _handleVisibleMonthList();
                                       currentMonthInEndDayList =
                                           linkToEndMonthList[index];
                                       if (currentMonthInEndDayList !=
@@ -334,25 +351,6 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                           ),
                           blendMode: BlendMode.dstATop,
                         )),
-                    // Positioned(
-                    //   right: 0,
-                    //   left: 0,
-                    //   top: 0,
-                    //   child: Container(
-                    //     height: MediaQuery.of(context).size.height * .13,
-                    //     decoration: BoxDecoration(
-                    //         gradient: LinearGradient(
-                    //       begin: Alignment.topCenter,
-                    //       end: Alignment.bottomCenter,
-                    //       colors: <Color>[
-                    //         Colors.black,
-                    //         Colors.black.withOpacity(.8),
-                    //         Colors.black.withOpacity(.4),
-                    //         Colors.black.withOpacity(.1),
-                    //       ],
-                    //     )),
-                    //   ),
-                    // ),
                     Positioned(
                         right: 0,
                         left: 0,
