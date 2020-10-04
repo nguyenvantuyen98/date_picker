@@ -2,7 +2,6 @@ import 'package:date_picker/custom_scroll.dart';
 import 'package:date_picker/time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'components/go_arrow_button.dart';
 
 class PickDate extends StatefulWidget {
@@ -16,19 +15,29 @@ class PickDate extends StatefulWidget {
 class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
   Time time = Time();
 
-  List<String> hoursList = [
-    "1hr",
-    "2hrs",
-    "3hrs",
-    "4hrs",
-    "5hrs",
-    "6hrs",
-    "7hrs",
-    "8hrs"
-  ];
-  List<String> endDayList = [];
-  List<String> endHourList = [];
-  List<String> endMonthList = [];
+  List<String> startDayList;
+  List<int> linkToStartMonthList;
+  List<String> startMonthList;
+  List<String> startHourList;
+  List<String> endDayList;
+  List<int> linkToEndMonthList;
+  List<String> endMonthList;
+  List<String> endHourList;
+
+  int currentMonthInStartMonthList;
+  int currentMonthInStartDayList;
+  int currentMonthInEndMonthList;
+  int currentMonthInEndDayList;
+
+  _PickDateState() {
+    Map dayList = time.getDayList();
+    startDayList = dayList['dayStringList'];
+    linkToStartMonthList = dayList['linkToMonthList'];
+    startMonthList = time.getMonthList();
+    startHourList = time.getHourList();
+    currentMonthInStartMonthList = 13 - startMonthList.length;
+    currentMonthInStartDayList = linkToStartMonthList[0];
+  }
 
   bool isVisibleStartDayList = true;
   bool isVisibleUntilButton = true;
@@ -43,12 +52,6 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
   int _focusStartHourIndex = 0;
   int _focusStartDayIndex = 0;
   int _focusStartMonthIndex = 0;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
 
   _handleVisibleStartTimeList() {
     setState(() {
@@ -66,20 +69,12 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
   }
 
   _getEndListTime() {
-    endDayList = [];
-    endHourList = [];
-    endMonthList = [];
-    for (int i = _focusStartDayIndex;
-        i < time.getDayList()["dayStringList"].length;
-        i++) {
-      endDayList.add(time.getDayList()["dayStringList"][i]);
-    }
-    for (int i = _focusStartHourIndex; i < time.getHourList().length; i++) {
-      endHourList.add(time.getHourList()[i]);
-    }
-    for (int i = _focusStartMonthIndex; i < time.getMonthList().length; i++) {
-      endMonthList.add(time.getMonthList()[i]);
-    }
+    endDayList = startDayList.sublist(_focusStartDayIndex);
+    endMonthList = startMonthList.sublist(_focusStartMonthIndex);
+    endHourList = startHourList.sublist(_focusStartHourIndex);
+    linkToEndMonthList = linkToStartMonthList.sublist(_focusStartDayIndex);
+    currentMonthInEndMonthList = 13 - endMonthList.length;
+    currentMonthInEndDayList = linkToEndMonthList[0];
   }
 
   _handleUntilButton() {
@@ -110,6 +105,11 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
       }
     });
   }
+
+  GlobalKey<CustomScrollState> startDayKey = GlobalKey();
+  GlobalKey<CustomScrollState> startMonthKey = GlobalKey();
+  GlobalKey<CustomScrollState> endDayKey = GlobalKey();
+  GlobalKey<CustomScrollState> endMonthKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -143,9 +143,19 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                           ? Container(
                               height: 60,
                               child: CustomScroll(
-                                  inputText: time.getDayList()["dayStringList"],
+                                  inputText: startDayList,
+                                  key: startDayKey,
                                   callBack: (index) {
                                     _focusStartDayIndex = index;
+                                    currentMonthInStartDayList =
+                                        linkToStartMonthList[index];
+                                    if (currentMonthInStartDayList !=
+                                        currentMonthInStartMonthList) {
+                                      startMonthKey.currentState.focusOn(
+                                          currentMonthInStartDayList +
+                                              startMonthList.length -
+                                              13);
+                                    }
                                     //print(_focusStartDayIndex);
                                     _handleVisibleStartTimeList();
                                   }))
@@ -157,9 +167,18 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                                 //color: Colors.white,
                                 height: 60,
                                 child: CustomScroll(
-                                  inputText: time.getMonthList(),
+                                  inputText: startMonthList,
+                                  key: startMonthKey,
                                   callBack: (index) {
                                     _focusStartMonthIndex = index;
+                                    currentMonthInStartMonthList =
+                                        13 - startMonthList.length + index;
+                                    if (currentMonthInStartMonthList !=
+                                        currentMonthInStartDayList) {
+                                      startDayKey.currentState.quickFocusOn(
+                                          linkToStartMonthList.indexOf(
+                                              currentMonthInStartMonthList));
+                                    }
                                   },
                                 ))
                             : SizedBox(),
@@ -171,7 +190,7 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                                 //color: Colors.white,
                                 height: 60,
                                 child: CustomScroll(
-                                  inputText: time.getHourList(),
+                                  inputText: startHourList,
                                   callBack: (index) =>
                                       (_focusStartHourIndex = index),
                                 ))
@@ -200,7 +219,7 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                             : Container(
                                 height: 50,
                                 child: CustomScroll(
-                                  inputText: hoursList,
+                                  inputText: Time.hoursList,
                                   callBack: (index) {},
                                 ),
                               ),
@@ -237,9 +256,19 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                                 height: 60,
                                 child: CustomScroll(
                                     inputText: endDayList,
+                                    key: endDayKey,
                                     callBack: (index) {
                                       // _focusDayIndex = index;
                                       // _handleVisibleStartTimeList();
+                                      currentMonthInEndDayList =
+                                          linkToEndMonthList[index];
+                                      if (currentMonthInEndDayList !=
+                                          currentMonthInEndMonthList) {
+                                        endMonthKey.currentState.focusOn(
+                                            currentMonthInEndDayList +
+                                                endMonthList.length -
+                                                13);
+                                      }
                                     }))
                             : SizedBox(),
                       ),
@@ -251,7 +280,17 @@ class _PickDateState extends State<PickDate> with TickerProviderStateMixin {
                                 height: 50,
                                 child: CustomScroll(
                                   inputText: endMonthList,
-                                  callBack: (index) {},
+                                  key: endMonthKey,
+                                  callBack: (index) {
+                                    currentMonthInEndMonthList =
+                                        13 - endMonthList.length + index;
+                                    if (currentMonthInEndMonthList !=
+                                        currentMonthInEndDayList) {
+                                      endDayKey.currentState.quickFocusOn(
+                                          linkToEndMonthList.indexOf(
+                                              currentMonthInEndMonthList));
+                                    }
+                                  },
                                 ))
                             : SizedBox(),
                       ),

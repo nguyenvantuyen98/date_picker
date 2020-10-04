@@ -96,4 +96,15 @@ class Time {
     if (now.minute < 45) return now.add(Duration(minutes: 45 - now.minute));
     return now.add(Duration(minutes: 60 - now.minute));
   }
+
+  static List<String> hoursList = [
+    "1hr",
+    "2hrs",
+    "3hrs",
+    "4hrs",
+    "5hrs",
+    "6hrs",
+    "7hrs",
+    "8hrs"
+  ];
 }
