@@ -40,6 +40,8 @@ class _PickDateState extends State<PickDate> {
     currentMonthInStartDayList = linkToStartMonthList[0];
   }
 
+  bool isVibileNowFor = false;
+
   bool isVisibleStartDayList = true;
   bool isVisibleUntilButton = true;
   bool isVisibleStartHourList = false;
@@ -103,6 +105,7 @@ class _PickDateState extends State<PickDate> {
         isVisibleEndDayList = false;
         isVisibleEndHourList = false;
         isVisibleEndMonthList = false;
+        isVibileNowFor = true;
       } else {
         isPlusOrCloseButton = !isPlusOrCloseButton;
         if (!isPlusOrCloseButton) {
@@ -156,7 +159,7 @@ class _PickDateState extends State<PickDate> {
                       isVisibleStartDayList
                           ? Container(
                               height: 60,
-                              margin: EdgeInsets.only(top: 40),
+                              margin: EdgeInsets.only(top: 20),
                               child: CustomScroll(
                                   inputText: startDayList,
                                   key: startDayKey,
@@ -213,9 +216,8 @@ class _PickDateState extends State<PickDate> {
                       ),
                       AnimatedSwitcher(
                         duration: Duration(milliseconds: 300),
-                        child: isVisibleStartDayList
-                            ? SizedBox()
-                            : Align(
+                        child: isVibileNowFor
+                            ? Align(
                                 alignment: Alignment.centerLeft,
                                 child: SizedBox(
                                   height: 60,
@@ -225,19 +227,20 @@ class _PickDateState extends State<PickDate> {
                                           color: Colors.white,
                                           fontSize: 40)),
                                 ),
-                              ),
+                              )
+                            : SizedBox(),
                       ),
                       AnimatedSwitcher(
                         duration: Duration(milliseconds: 300),
-                        child: isVisibleStartDayList
-                            ? SizedBox()
-                            : Container(
+                        child: isVibileNowFor
+                            ? Container(
                                 height: 50,
                                 child: CustomScroll(
                                   inputText: Time.hoursList,
                                   callBack: (index) {},
                                 ),
-                              ),
+                              )
+                            : SizedBox(),
                       ),
                       isVisibleUntilButton
                           ? Row(
@@ -402,7 +405,19 @@ class _PickDateState extends State<PickDate> {
             color: Colors.grey.withOpacity(.6),
           ),
           onPressed: () {
-            isVisibleEndDayList ? _handleUntilButton() : Navigator.pop(context);
+            if (isVisibleEndDayList) {
+              _handleUntilButton();
+            } else {
+              setState(() {
+                if (isVibileNowFor == true) {
+                  isVibileNowFor = false;
+                  isVisibleStartDayList = true;
+                  isVisibleUntilButton = true;
+                } else {
+                  Navigator.pop(context);
+                }
+              });
+            }
           },
         ),
         IconButton(
