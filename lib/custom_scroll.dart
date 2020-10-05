@@ -89,7 +89,7 @@ class CustomScrollState extends State<CustomScroll> {
   }
 
   _scrollListener() {
-    int index = getIndex(scrollController.position.pixels <= maxPosition
+    int index = getIndex(scrollController.position.pixels < maxPosition
         ? scrollController.position.pixels
         : maxPosition);
     if (focus != index) {
@@ -103,7 +103,10 @@ class CustomScrollState extends State<CustomScroll> {
       if (position < locationList[index].end) break;
       index++;
     }
-    return index;
+    assert(index < 366);
+    return index < widget.textItemList.length - 1
+        ? index
+        : widget.textItemList.length - 1;
   }
 
   void lightUp(int index) {
