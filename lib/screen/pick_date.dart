@@ -292,7 +292,7 @@ class _PickDateState extends State<PickDate> {
                         child: isVisibleEndMonthList
                             ? Container(
                                 //color: Colors.white,
-                                height: 50,
+                                height: 60,
                                 child: CustomScroll(
                                   inputText: endMonthList,
                                   key: endMonthKey,
@@ -315,7 +315,7 @@ class _PickDateState extends State<PickDate> {
                         child: isVisibleEndHourList
                             ? Container(
                                 //color: Colors.white,
-                                height: 50,
+                                height: 60,
                                 child: CustomScroll(
                                     inputText: endHourList,
                                     callBack: (index) {
@@ -379,7 +379,7 @@ class _PickDateState extends State<PickDate> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * .2,
                 child: Align(
-                  alignment: Alignment.topCenter,
+                  alignment: Alignment.center,
                   child: GoArrowButton(
                     press: () {},
                   ),
