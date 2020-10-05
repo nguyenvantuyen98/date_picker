@@ -14,7 +14,6 @@ class Time {
 
     Duration difference =
         DateTime(now.year + 1, now.month, now.day).difference(now);
-    // Duration difference = DateTime(now.year + 1, 1, 1).difference(now);
     for (int i = 2; i <= difference.inDays; i++) {
       DateTime nextDay = now.add(Duration(days: i));
       dayStringList.add(formatDay(nextDay));
@@ -111,22 +110,6 @@ class Time {
     if (month == 11) return 'Nov';
     if (month == 12) return 'Dec';
     return '';
-  }
-
-  static int getIntMonth(String month) {
-    if (month == 'Jan') return 1;
-    if (month == 'Feb') return 2;
-    if (month == 'Mar') return 3;
-    if (month == 'Apr') return 4;
-    if (month == 'May') return 5;
-    if (month == 'Jun') return 6;
-    if (month == 'Jul') return 7;
-    if (month == 'Aug') return 8;
-    if (month == 'Sep') return 9;
-    if (month == 'Oct') return 10;
-    if (month == 'Nov') return 11;
-    if (month == 'Dec') return 12;
-    return 0;
   }
 
   DateTime roundTimeEach15Minutes() {

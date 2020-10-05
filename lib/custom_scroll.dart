@@ -34,6 +34,7 @@ class CustomScrollState extends State<CustomScroll> {
   ScrollController scrollController = ScrollController();
   int focus = 0;
   double maxPosition = 0.0;
+  List<Location> locationList = [];
 
   @override
   void initState() {
@@ -46,7 +47,9 @@ class CustomScrollState extends State<CustomScroll> {
         focusOn(focus);
       }
       for (TextItem textItem in widget.textItemList) {
+        double start = maxPosition;
         maxPosition += textItem.getSize(context).width + 20;
+        locationList.add(Location(start, maxPosition));
       }
     });
   }
@@ -95,14 +98,10 @@ class CustomScrollState extends State<CustomScroll> {
   }
 
   int getIndex(double position) {
-    double currentPosition = 0.0;
     int index = 0;
-    while (position > currentPosition) {
-      currentPosition += widget.textItemList[index].getSize(context).width + 20;
-      if (position < currentPosition) {
-        break;
-      }
-      index += 1;
+    while (position > locationList[index].start) {
+      if (position < locationList[index].end) break;
+      index++;
     }
     return index;
   }
@@ -123,19 +122,11 @@ class CustomScrollState extends State<CustomScroll> {
   }
 
   void focusOn(int index) {
-    double location = 0.0;
-    for (int i = 0; i < index; i++) {
-      location += widget.textItemList[i].getSize(context).width + 20;
-    }
-    _animateScroll(location);
+    _animateScroll(locationList[index].start);
   }
 
   void quickFocusOn(int index) {
-    double location = 0.0;
-    for (int i = 0; i < index; i++) {
-      location += widget.textItemList[i].getSize(context).width + 20;
-    }
-    scrollController.jumpTo(location);
+    scrollController.jumpTo(locationList[index].start);
   }
 
   void _animateScroll(double location) {
@@ -146,5 +137,16 @@ class CustomScrollState extends State<CustomScroll> {
         curve: Curves.ease,
       );
     });
+  }
+}
+
+class Location {
+  final double start;
+  final double end;
+  Location(this.start, this.end);
+
+  @override
+  String toString() {
+    return 'start: $start, end: $end';
   }
 }
