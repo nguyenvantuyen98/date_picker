@@ -19,10 +19,12 @@ class _PickDateState extends State<PickDate> {
   List<String> startDayList;
   List<int> linkToStartMonthList;
   List<String> startMonthList;
+  List<int> linkToStartDayList;
   List<String> startHourList;
   List<String> endDayList;
   List<int> linkToEndMonthList;
   List<String> endMonthList;
+  List<int> linkToEndDayList;
   List<String> endHourList;
 
   int currentMonthInStartMonthList;
@@ -34,9 +36,10 @@ class _PickDateState extends State<PickDate> {
     Map dayList = time.getDayList();
     startDayList = dayList['dayStringList'];
     linkToStartMonthList = dayList['linkToMonthList'];
-    startMonthList = time.getMonthList();
+    startMonthList = dayList['monthStringList'];
+    linkToStartDayList = dayList['linkToDayList'];
     startHourList = time.getHourList();
-    currentMonthInStartMonthList = 13 - startMonthList.length;
+    currentMonthInStartMonthList = linkToStartDayList[0];
     currentMonthInStartDayList = linkToStartMonthList[0];
   }
 
@@ -92,7 +95,8 @@ class _PickDateState extends State<PickDate> {
     endMonthList = startMonthList.sublist(_focusStartMonthIndex);
     endHourList = startHourList.sublist(_focusStartHourIndex);
     linkToEndMonthList = linkToStartMonthList.sublist(_focusStartDayIndex);
-    currentMonthInEndMonthList = 13 - endMonthList.length;
+    linkToEndDayList = linkToStartDayList.sublist(_focusStartMonthIndex);
+    currentMonthInEndMonthList = linkToEndDayList[0];
     currentMonthInEndDayList = linkToEndMonthList[0];
   }
 
@@ -162,17 +166,25 @@ class _PickDateState extends State<PickDate> {
                               margin: EdgeInsets.only(top: 20),
                               child: CustomScroll(
                                   inputText: startDayList,
+                                  haveLinkingList: true,
+                                  linkingList: linkToStartMonthList,
                                   key: startDayKey,
-                                  callBack: (index) {
+                                  linkCallBack: (index, link) {
                                     _focusStartDayIndex = index;
-                                    currentMonthInStartDayList =
-                                        linkToStartMonthList[index];
+                                    currentMonthInStartDayList = link;
                                     if (currentMonthInStartDayList !=
                                         currentMonthInStartMonthList) {
-                                      startMonthKey.currentState.focusOn(
-                                          currentMonthInStartDayList +
-                                              startMonthList.length -
-                                              13);
+                                      int start = 0;
+                                      if (currentMonthInStartDayList ==
+                                          linkToStartDayList[0]) {
+                                        start = index > startDayList.length ~/ 2
+                                            ? linkToStartDayList.length ~/ 2
+                                            : 0;
+                                      }
+                                      startMonthKey.currentState.quickFocusOn(
+                                          linkToStartDayList.indexOf(
+                                              currentMonthInStartDayList,
+                                              start));
                                     }
                                     //print(_focusStartDayIndex);
                                     _handleVisibleStartTimeList();
@@ -186,21 +198,27 @@ class _PickDateState extends State<PickDate> {
                                 height: 60,
                                 child: CustomScroll(
                                   inputText: startMonthList,
+                                  haveLinkingList: true,
+                                  linkingList: linkToStartDayList,
                                   key: startMonthKey,
-                                  callBack: (index) {
+                                  linkCallBack: (index, link) {
                                     _focusStartMonthIndex = index;
-                                    currentMonthInStartMonthList =
-                                        13 - startMonthList.length + index;
+                                    currentMonthInStartMonthList = link;
                                     if (currentMonthInStartMonthList !=
                                         currentMonthInStartDayList) {
+                                      int start = 0;
+                                      if (index ==
+                                          linkToStartDayList.length - 1) {
+                                        start =
+                                            linkToStartMonthList.length ~/ 2;
+                                      }
                                       int newIndex =
                                           linkToStartMonthList.indexOf(
-                                              currentMonthInStartMonthList);
-
-                                      startDayKey.currentState.quickFocusOn(
-                                          newIndex == 0
-                                              ? newIndex + 3
-                                              : newIndex);
+                                              currentMonthInStartMonthList,
+                                              start);
+                                      newIndex = newIndex == 0 ? 3 : newIndex;
+                                      startDayKey.currentState
+                                          .quickFocusOn(newIndex);
                                     }
                                   },
                                 ))
@@ -214,6 +232,7 @@ class _PickDateState extends State<PickDate> {
                                 height: 60,
                                 child: CustomScroll(
                                   inputText: startHourList,
+                                  haveLinkingList: false,
                                   callBack: (index) =>
                                       (_focusStartHourIndex = index),
                                 ))
@@ -242,6 +261,7 @@ class _PickDateState extends State<PickDate> {
                                 height: 50,
                                 child: CustomScroll(
                                   inputText: Time.hoursList,
+                                  haveLinkingList: false,
                                   callBack: (index) {},
                                 ),
                               )
@@ -279,18 +299,26 @@ class _PickDateState extends State<PickDate> {
                                 height: 60,
                                 child: CustomScroll(
                                     inputText: endDayList,
+                                    haveLinkingList: true,
+                                    linkingList: linkToEndMonthList,
                                     key: endDayKey,
-                                    callBack: (index) {
+                                    linkCallBack: (index, link) {
                                       _focusEndDayIndex = index;
                                       _handleVisibleMonthList();
-                                      currentMonthInEndDayList =
-                                          linkToEndMonthList[index];
+                                      currentMonthInEndDayList = link;
                                       if (currentMonthInEndDayList !=
                                           currentMonthInEndMonthList) {
-                                        endMonthKey.currentState.focusOn(
-                                            currentMonthInEndDayList +
-                                                endMonthList.length -
-                                                13);
+                                        int start = 0;
+                                        if (currentMonthInEndDayList ==
+                                            linkToEndDayList[0]) {
+                                          start = index > endDayList.length ~/ 2
+                                              ? linkToEndDayList.length ~/ 2
+                                              : 0;
+                                        }
+                                        endMonthKey.currentState.quickFocusOn(
+                                            linkToEndDayList.indexOf(
+                                                currentMonthInEndDayList,
+                                                start));
                                       }
                                     }))
                             : SizedBox(),
@@ -303,16 +331,21 @@ class _PickDateState extends State<PickDate> {
                                 height: 60,
                                 child: CustomScroll(
                                   inputText: endMonthList,
+                                  haveLinkingList: true,
+                                  linkingList: linkToEndDayList,
                                   key: endMonthKey,
-                                  callBack: (index) {
+                                  linkCallBack: (index, link) {
                                     _focusEndMonthIndex = index;
-                                    currentMonthInEndMonthList =
-                                        13 - endMonthList.length + index;
-
+                                    currentMonthInEndMonthList = link;
                                     if (currentMonthInEndMonthList !=
                                         currentMonthInEndDayList) {
-                                      int newIndex = linkToEndMonthList
-                                          .indexOf(currentMonthInEndMonthList);
+                                      int start = 0;
+                                      if (index ==
+                                          linkToEndDayList.length - 1) {
+                                        start = linkToEndMonthList.length ~/ 2;
+                                      }
+                                      int newIndex = linkToEndMonthList.indexOf(
+                                          currentMonthInEndMonthList, start);
                                       if (newIndex == 0) {
                                         if (endDayList[0] == "Today")
                                           newIndex += 2;
@@ -334,6 +367,7 @@ class _PickDateState extends State<PickDate> {
                                 height: 60,
                                 child: CustomScroll(
                                     inputText: endHourList,
+                                    haveLinkingList: false,
                                     callBack: (index) {
                                       _focusEndHourIndex = index;
                                     }))
