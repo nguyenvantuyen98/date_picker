@@ -22,6 +22,7 @@ class CustomScroll extends StatefulWidget {
 class CustomScrollState extends State<CustomScroll> {
   ScrollController scrollController = ScrollController();
   int focus = 0;
+  double maxPosition = 0.0;
 
   @override
   void initState() {
@@ -32,6 +33,9 @@ class CustomScrollState extends State<CustomScroll> {
       if (widget.focusOn != null && widget.focusOn < widget.inputText.length) {
         focus = widget.focusOn;
         focusOn(focus);
+      }
+      for (TextItem textItem in widget.textItemList) {
+        maxPosition += textItem.getSize(context).width;
       }
     });
   }
@@ -71,7 +75,9 @@ class CustomScrollState extends State<CustomScroll> {
   }
 
   _scrollListener() {
-    int index = getIndex(scrollController.position.pixels);
+    int index = getIndex(scrollController.position.pixels <= maxPosition
+        ? scrollController.position.pixels
+        : maxPosition);
     if (focus != index) {
       lightUp(index);
     }
