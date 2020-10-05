@@ -75,9 +75,13 @@ class CustomScrollState extends State<CustomScroll> {
   }
 
   _scrollListener() {
-    int index = getIndex(scrollController.position.pixels <= maxPosition
+    double position = scrollController.position.pixels >= 0
         ? scrollController.position.pixels
-        : maxPosition);
+        : 0;
+    position = scrollController.position.pixels <= maxPosition
+        ? scrollController.position.pixels
+        : maxPosition;
+    int index = getIndex(position);
     if (focus != index) {
       lightUp(index);
     }
