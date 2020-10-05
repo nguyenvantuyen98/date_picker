@@ -1,4 +1,5 @@
 import 'package:date_picker/custom_scroll.dart';
+import 'package:date_picker/screen/components/flush_bar.dart';
 import 'package:date_picker/time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,12 +9,13 @@ import 'components/go_arrow_button.dart';
 class PickDate extends StatefulWidget {
   final String title;
 
-  const PickDate({Key key, this.title}) : super(key: key);
+  const PickDate({Key key, this.title = "Hello World"}) : super(key: key);
   @override
   _PickDateState createState() => _PickDateState();
 }
 
-class _PickDateState extends State<PickDate> {
+class _PickDateState extends State<PickDate>
+    with SingleTickerProviderStateMixin {
   Time time = Time();
 
   List<String> startDayList;
@@ -62,6 +64,16 @@ class _PickDateState extends State<PickDate> {
   int _focusEndHourIndex = 0;
   int _focusEndDayIndex = 0;
   int _focusEndMonthIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   _handleVisibleStartTimeList() {
     setState(() {
@@ -128,6 +140,22 @@ class _PickDateState extends State<PickDate> {
         }
       }
     });
+  }
+
+  _handleGoArrowButton() {
+    if ((_focusStartDayIndex == 0 || _focusStartDayIndex == null) &&
+        !isVibileNowFor) {
+      _handleUntilButton();
+    } else if (_focusStartDayIndex >
+            startDayList.indexOf(endDayList[_focusEndDayIndex]) &&
+        _focusStartMonthIndex >
+            startMonthList.indexOf(endMonthList[_focusEndMonthIndex])) {
+      flushbar.show(context);
+    } else {
+      if (isVibileNowFor) {
+        Navigator.pushNamed(context, "/placescreen/${widget.title}");
+      }
+    }
   }
 
   GlobalKey<CustomScrollState> startDayKey = GlobalKey();
@@ -390,7 +418,7 @@ class _PickDateState extends State<PickDate> {
                                 Colors.black,
                                 Colors.black.withOpacity(.8),
                                 Colors.black.withOpacity(.4),
-                                Colors.black.withOpacity(.1),
+                                Colors.transparent,
                               ],
                             ).createShader(bounds);
                           },
@@ -410,7 +438,7 @@ class _PickDateState extends State<PickDate> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: <Color>[
-                                Colors.black.withOpacity(.1),
+                                Colors.transparent,
                                 Colors.black.withOpacity(.4),
                                 Colors.black.withOpacity(.8),
                                 Colors.black
@@ -431,7 +459,9 @@ class _PickDateState extends State<PickDate> {
                 child: Align(
                   alignment: Alignment.center,
                   child: GoArrowButton(
-                    press: () {},
+                    press: () {
+                      _handleGoArrowButton();
+                    },
                   ),
                 ),
               )
@@ -454,6 +484,7 @@ class _PickDateState extends State<PickDate> {
           onPressed: () {
             if (isVisibleEndDayList) {
               _handleUntilButton();
+              isPlusOrCloseButton = true;
             } else {
               setState(() {
                 if (isVibileNowFor == true) {

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+
 import 'components/alert_dialog.dart';
 import 'components/go_arrow_button.dart';
 
 class AddTitle extends StatefulWidget {
   @override
-  _AddTitleState createState() => _AddTitleState();
+  AddTitleState createState() => AddTitleState();
 }
 
-class _AddTitleState extends State<AddTitle> {
+class AddTitleState extends State<AddTitle> {
   var now = DateTime.now();
   bool isVisibleGoButton = false;
   double _currentGreetingOpacity = 1;
@@ -48,19 +49,25 @@ class _AddTitleState extends State<AddTitle> {
                           duration: Duration(milliseconds: 200),
                           curve: Curves.decelerate,
                           opacity: _currentGreetingOpacity,
-                          child: Text("Hey,", style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 40, fontWeight: FontWeight.bold
-                          ),),
+                          child: Text(
+                            "Hey,",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                         AnimatedOpacity(
                           duration: Duration(milliseconds: 350),
                           curve: Curves.decelerate,
                           opacity: _currentGreetingOpacity,
-                          child: Text("Boy", style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 40, fontWeight: FontWeight.bold
-                          ),),
+                          child: Text(
+                            "Boy",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                         TextField(
                           onTap: () {
@@ -83,7 +90,7 @@ class _AddTitleState extends State<AddTitle> {
                               fontWeight: FontWeight.bold,
                               fontSize: 30),
                           decoration: InputDecoration(
-                            hintText: "Input here",
+                            hintText: "Up for ?",
                             hintStyle: TextStyle(
                               color: Color(0xFF232323),
                             ),
