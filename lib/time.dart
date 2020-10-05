@@ -3,7 +3,7 @@ class Time {
 
   List<String> getMonthList() {
     List<String> monthStringList = [];
-    for (int i = DateTime.now().month; i <= 12; i++) {
+    for (int i = now.month; i <= 12; i++) {
       monthStringList.add(getMonth(i));
     }
     return monthStringList;

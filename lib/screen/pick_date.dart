@@ -193,9 +193,14 @@ class _PickDateState extends State<PickDate> {
                                         13 - startMonthList.length + index;
                                     if (currentMonthInStartMonthList !=
                                         currentMonthInStartDayList) {
-                                      startDayKey.currentState.quickFocusOn(
+                                      int newIndex =
                                           linkToStartMonthList.indexOf(
-                                              currentMonthInStartMonthList));
+                                              currentMonthInStartMonthList);
+
+                                      startDayKey.currentState.quickFocusOn(
+                                          newIndex == 0
+                                              ? newIndex + 3
+                                              : newIndex);
                                     }
                                   },
                                 ))
@@ -303,11 +308,19 @@ class _PickDateState extends State<PickDate> {
                                     _focusEndMonthIndex = index;
                                     currentMonthInEndMonthList =
                                         13 - endMonthList.length + index;
+
                                     if (currentMonthInEndMonthList !=
                                         currentMonthInEndDayList) {
-                                      endDayKey.currentState.quickFocusOn(
-                                          linkToEndMonthList.indexOf(
-                                              currentMonthInEndMonthList));
+                                      int newIndex = linkToEndMonthList
+                                          .indexOf(currentMonthInEndMonthList);
+                                      if (newIndex == 0) {
+                                        if (endDayList[0] == "Today")
+                                          newIndex += 2;
+                                        else if (endDayList[0] == "Tomorrow")
+                                          newIndex += 1;
+                                      }
+                                      endDayKey.currentState
+                                          .quickFocusOn(newIndex);
                                     }
                                   },
                                 ))
