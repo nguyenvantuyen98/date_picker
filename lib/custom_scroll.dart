@@ -75,13 +75,9 @@ class CustomScrollState extends State<CustomScroll> {
   }
 
   _scrollListener() {
-    double position = scrollController.position.pixels >= 0
+    int index = getIndex(scrollController.position.pixels <= maxPosition
         ? scrollController.position.pixels
-        : 0;
-    position = scrollController.position.pixels <= maxPosition
-        ? scrollController.position.pixels
-        : maxPosition;
-    int index = getIndex(position);
+        : maxPosition);
     if (focus != index) {
       lightUp(index);
     }
@@ -104,7 +100,8 @@ class CustomScrollState extends State<CustomScroll> {
     setState(() {
       focus = index;
     });
-    widget.callBack(index);
+    if (index >= 0 && index < widget.textItemList.length)
+      widget.callBack(index);
   }
 
   void focusOn(int index) {
