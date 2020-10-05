@@ -35,7 +35,7 @@ class CustomScrollState extends State<CustomScroll> {
         focusOn(focus);
       }
       for (TextItem textItem in widget.textItemList) {
-        maxPosition += textItem.getSize(context).width;
+        maxPosition += textItem.getSize(context).width + 20;
       }
     });
   }
