@@ -18,14 +18,14 @@ class FluroRouter {
       Handler(handlerFunc: (context, Map<String, dynamic> params) {
     return PlaceScreen(
       title: params["title"][0],
-      listtimeresult: (params["listtimeresult"][0]),
+      pickedDate: (params["pickedDate"][0]),
     );
   });
   void setRouter() {
     router.define("/", handler: addTitleHandler);
     //router.define("/pickdate/:title", handler: pickDateHandler);
     router.define("/pickdate", handler: pickDateHandler);
-    router.define("/placescreen/:title/:listtimeresult",
+    router.define("/placescreen/:title/:pickedDate",
         handler: placeHandler, transitionType: TransitionType.fadeIn);
   }
 }

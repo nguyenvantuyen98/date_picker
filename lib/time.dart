@@ -40,8 +40,9 @@ class Time {
   List<String> getHourList([bool isNewDay = false]) {
     List<String> hourStringList;
 
-    DateTime roundedTime =
-        isNewDay ? DateTime(now.year) : roundTimeEach15Minutes();
+    DateTime roundedTime = isNewDay
+        ? DateTime(now.year, now.month, now.day, 0, 0)
+        : roundTimeEach15Minutes();
     if (roundedTime.hour < 12)
       hourStringList = [
         'Anytime',
@@ -82,7 +83,9 @@ class Time {
 
   String formatTime(DateTime dateTime) {
     String hours = '${dateTime.hour > 12 ? dateTime.hour - 12 : dateTime.hour}';
-    String minutes = dateTime.minute != 0 ? ':${dateTime.minute}' : '';
+    String minutes = dateTime.minute != 0
+        ? ':${dateTime.minute.toString().padLeft(2, '0')}'
+        : '';
     return '$hours$minutes${dateTime.hour < 12 ? 'am' : 'pm'}';
   }
 
@@ -135,4 +138,8 @@ class Time {
     "7hrs",
     "8hrs"
   ];
+
+  bool checkDate(DateTime begin, DateTime end) {
+    return end.isAfter(begin);
+  }
 }

@@ -1,5 +1,4 @@
 import 'package:date_picker/custom_scroll.dart';
-import 'package:date_picker/screen/components/flush_bar.dart';
 import 'package:date_picker/time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -31,7 +30,13 @@ class _PickDateState extends State<PickDate>
   List<String> endHourList;
 
   List<String> newDayHourList;
-  List<String> currentHourList;
+
+  String startDay;
+  String startMonth;
+  String startHour;
+  String endDay;
+  String endMonth;
+  String endHour;
 
   int currentMonthInStartMonthList;
   int currentMonthInStartDayList;
@@ -50,7 +55,7 @@ class _PickDateState extends State<PickDate>
     newDayHourList = time.getHourList(true);
   }
 
-  bool isVibileNowFor = false;
+  bool isVisibleNowFor = false;
 
   bool isVisibleStartDayList = true;
   bool isVisibleUntilButton = true;
@@ -62,6 +67,8 @@ class _PickDateState extends State<PickDate>
   bool isVisibleEndHourList = false;
   bool isVisibleEndMonthList = false;
 
+  bool isNewDay = false;
+
   int _focusStartHourIndex = 0;
   int _focusStartDayIndex = 0;
   int _focusStartMonthIndex = 0;
@@ -69,6 +76,8 @@ class _PickDateState extends State<PickDate>
   int _focusEndHourIndex = 0;
   int _focusEndDayIndex = 0;
   int _focusEndMonthIndex = 0;
+
+  int _focusHourListIndex = 0;
 
   @override
   void initState() {
@@ -111,7 +120,6 @@ class _PickDateState extends State<PickDate>
     endDayList = startDayList.sublist(_focusStartDayIndex);
     endMonthList = startMonthList.sublist(_focusStartMonthIndex);
     endHourList = startHourList.sublist(_focusStartHourIndex + 1);
-    currentHourList = List.from(endHourList);
     linkToEndMonthList = linkToStartMonthList.sublist(_focusStartDayIndex);
     linkToEndDayList = linkToStartDayList.sublist(_focusStartMonthIndex);
     currentMonthInEndMonthList = linkToEndDayList[0];
@@ -119,7 +127,6 @@ class _PickDateState extends State<PickDate>
   }
 
   _handleUntilButton() {
-    _getEndListTime();
     setState(() {
       if (_focusStartDayIndex == 0) {
         isVisibleStartDayList = false;
@@ -127,8 +134,9 @@ class _PickDateState extends State<PickDate>
         isVisibleEndDayList = false;
         isVisibleEndHourList = false;
         isVisibleEndMonthList = false;
-        isVibileNowFor = true;
+        isVisibleNowFor = true;
       } else {
+        _getEndListTime();
         isPlusOrCloseButton = !isPlusOrCloseButton;
         if (!isPlusOrCloseButton) {
           if (_focusStartDayIndex < 3) {
@@ -150,30 +158,44 @@ class _PickDateState extends State<PickDate>
         duration: Duration(seconds: 1), curve: Curves.ease);
   }
 
-  _handleGoArrowButton() {
-    if ((_focusStartDayIndex == 0 || _focusStartDayIndex == null) &&
-        !isVibileNowFor) {
-      _handleUntilButton();
-    } else if (_focusStartDayIndex >
-            (endDayList == []
-                ? startDayList.indexOf(endDayList[_focusEndDayIndex])
-                : 0) &&
-        _focusStartMonthIndex >
-            (endMonthList == []
-                ? startMonthList.indexOf(endMonthList[_focusEndMonthIndex])
-                : 0)) {
-      if (!isPlusOrCloseButton) {
-        flushbar.show(context);
-      }
+  void _getPickedDate() {
+    if (isVisibleNowFor) {
+      startDay = 'Today';
+      startMonth = startMonthList[_focusStartMonthIndex];
+      startHour = 'Now';
+      endDay = '';
+      endMonth = '';
+      endHour = time
+          .formatTime(DateTime.now().add(Duration(hours: _focusHourListIndex)));
     } else {
-      if (isVibileNowFor) {
-        var timeresult = [
-          [startDayList[1], startMonthList[0]],
-          ["Now"]
-        ].toString();
-        Navigator.pushNamed(
-            context, "/placescreen/${widget.title}/$timeresult");
+      startDay = startDayList[_focusStartDayIndex];
+      startMonth = startMonthList[_focusStartMonthIndex];
+      startHour = startHourList[_focusStartHourIndex];
+      if (endDayList != null) {
+        endDay = endDayList[_focusEndDayIndex];
+        endMonth = endMonthList[_focusEndMonthIndex];
+        endHour = endHourList[_focusEndHourIndex];
+      } else {
+        endDay = '';
+        endMonth = '';
+        endHour = '';
       }
+    }
+    if (startDay == endDay && startMonth == endMonth) {
+      endDay = '';
+      endMonth = '';
+    }
+  }
+
+  _handleGoArrowButton() {
+    if ((_focusStartDayIndex == 0) && !isVisibleNowFor) {
+      _handleUntilButton();
+      //flushbar.show(context);
+    } else {
+      _getPickedDate();
+      String pickedDate =
+          '$startDay $startMonth $startHour ${endHour == '' ? '' : '-'} $endDay $endMonth $endHour';
+      Navigator.pushNamed(context, "/placescreen/${widget.title}/$pickedDate");
     }
   }
 
@@ -181,6 +203,7 @@ class _PickDateState extends State<PickDate>
   GlobalKey<CustomScrollState> startMonthKey = GlobalKey();
   GlobalKey<CustomScrollState> endDayKey = GlobalKey();
   GlobalKey<CustomScrollState> endMonthKey = GlobalKey();
+  GlobalKey<CustomScrollState> endHourKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +256,7 @@ class _PickDateState extends State<PickDate>
                                               currentMonthInStartDayList,
                                               start));
                                     }
-                                    //print(_focusStartDayIndex);
+
                                     _handleVisibleStartTimeList();
                                   }))
                           : SizedBox(),
@@ -287,7 +310,7 @@ class _PickDateState extends State<PickDate>
                       ),
                       AnimatedSwitcher(
                         duration: Duration(milliseconds: 300),
-                        child: isVibileNowFor
+                        child: isVisibleNowFor
                             ? Align(
                                 alignment: Alignment.centerLeft,
                                 child: SizedBox(
@@ -303,13 +326,15 @@ class _PickDateState extends State<PickDate>
                       ),
                       AnimatedSwitcher(
                         duration: Duration(milliseconds: 300),
-                        child: isVibileNowFor
+                        child: isVisibleNowFor
                             ? Container(
                                 height: 50,
                                 child: CustomScroll(
                                   inputText: Time.hoursList,
                                   haveLinkingList: false,
-                                  callBack: (index) {},
+                                  callBack: (index) {
+                                    _focusHourListIndex = index;
+                                  },
                                 ),
                               )
                             : SizedBox(),
@@ -350,15 +375,19 @@ class _PickDateState extends State<PickDate>
                                     linkingList: linkToEndMonthList,
                                     key: endDayKey,
                                     linkCallBack: (index, link) {
-                                      if (index != 0) {
+                                      if (index == 0) {
                                         setState(() {
-                                          endHourList = newDayHourList;
+                                          isNewDay = false;
+                                          endHourKey.currentState.focusOn(0);
                                         });
-                                      } else
-                                        setState(() {
-                                          endHourList = currentHourList;
-                                        });
-
+                                      } else {
+                                        if (isNewDay == false) {
+                                          setState(() {
+                                            isNewDay = true;
+                                            endHourKey.currentState.focusOn(0);
+                                          });
+                                        }
+                                      }
                                       _focusEndDayIndex = index;
                                       _handleVisibleMonthList();
                                       currentMonthInEndDayList = link;
@@ -422,7 +451,9 @@ class _PickDateState extends State<PickDate>
                                 //color: Colors.white,
                                 height: 60,
                                 child: CustomScroll(
-                                    inputText: endHourList,
+                                    inputText:
+                                        isNewDay ? newDayHourList : endHourList,
+                                    key: endHourKey,
                                     haveLinkingList: false,
                                     callBack: (index) {
                                       _focusEndHourIndex = index;
@@ -515,8 +546,8 @@ class _PickDateState extends State<PickDate>
               isPlusOrCloseButton = true;
             } else {
               setState(() {
-                if (isVibileNowFor == true) {
-                  isVibileNowFor = false;
+                if (isVisibleNowFor == true) {
+                  isVisibleNowFor = false;
                   isVisibleStartDayList = true;
                   isVisibleUntilButton = true;
                 } else {
