@@ -139,7 +139,6 @@ class Time {
     "8hrs"
   ];
 
-  bool checkDate(DateTime begin, DateTime end) {
-    return end.isAfter(begin);
-  }
+  bool checkDate(String startMonth, String startDay, String startHour,
+      String endMonth, String endDay, String endHour) {}
 }

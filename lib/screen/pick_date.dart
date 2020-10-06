@@ -203,7 +203,6 @@ class _PickDateState extends State<PickDate>
   GlobalKey<CustomScrollState> startMonthKey = GlobalKey();
   GlobalKey<CustomScrollState> endDayKey = GlobalKey();
   GlobalKey<CustomScrollState> endMonthKey = GlobalKey();
-  GlobalKey<CustomScrollState> endHourKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -375,19 +374,18 @@ class _PickDateState extends State<PickDate>
                                     linkingList: linkToEndMonthList,
                                     key: endDayKey,
                                     linkCallBack: (index, link) {
-                                      if (index == 0) {
-                                        setState(() {
-                                          isNewDay = false;
-                                          endHourKey.currentState.focusOn(0);
-                                        });
-                                      } else {
-                                        if (isNewDay == false) {
+                                      if (index != 0) {
+                                        if (isNewDay != true) {
                                           setState(() {
                                             isNewDay = true;
-                                            endHourKey.currentState.focusOn(0);
                                           });
                                         }
+                                      } else if (isNewDay == true) {
+                                        setState(() {
+                                          isNewDay = false;
+                                        });
                                       }
+
                                       _focusEndDayIndex = index;
                                       _handleVisibleMonthList();
                                       currentMonthInEndDayList = link;
@@ -447,17 +445,27 @@ class _PickDateState extends State<PickDate>
                       AnimatedSwitcher(
                         duration: Duration(milliseconds: 300),
                         child: isVisibleEndHourList
-                            ? Container(
-                                //color: Colors.white,
-                                height: 60,
-                                child: CustomScroll(
-                                    inputText:
-                                        isNewDay ? newDayHourList : endHourList,
-                                    key: endHourKey,
-                                    haveLinkingList: false,
-                                    callBack: (index) {
-                                      _focusEndHourIndex = index;
-                                    }))
+                            ? AnimatedSwitcher(
+                                duration: Duration(milliseconds: 300),
+                                child: isNewDay
+                                    ? Container(
+                                        height: 60,
+                                        child: CustomScroll(
+                                            inputText: newDayHourList,
+                                            key: Key('newDayHourList'),
+                                            haveLinkingList: false,
+                                            callBack: (index) {
+                                              _focusEndHourIndex = index;
+                                            }))
+                                    : Container(
+                                        height: 60,
+                                        child: CustomScroll(
+                                            inputText: endHourList,
+                                            key: Key('endHourList'),
+                                            haveLinkingList: false,
+                                            callBack: (index) {
+                                              _focusEndHourIndex = index;
+                                            })))
                             : SizedBox(),
                       ),
                       Container(
