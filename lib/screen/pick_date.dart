@@ -2,7 +2,7 @@ import 'package:date_picker/custom_scroll.dart';
 import 'package:date_picker/time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'components/flush_bar.dart';
 import 'components/go_arrow_button.dart';
 
 class PickDate extends StatefulWidget {
@@ -57,6 +57,8 @@ class _PickDateState extends State<PickDate>
 
   bool isVisibleNowFor = false;
 
+  bool isNewDay = false;
+
   bool isVisibleStartDayList = true;
   bool isVisibleUntilButton = true;
   bool isVisibleStartHourList = false;
@@ -67,8 +69,6 @@ class _PickDateState extends State<PickDate>
   bool isVisibleEndHourList = false;
   bool isVisibleEndMonthList = false;
 
-  bool isNewDay = false;
-
   int _focusStartHourIndex = 0;
   int _focusStartDayIndex = 0;
   int _focusStartMonthIndex = 0;
@@ -78,16 +78,6 @@ class _PickDateState extends State<PickDate>
   int _focusEndMonthIndex = 0;
 
   int _focusHourListIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   _handleVisibleStartTimeList() {
     setState(() {
@@ -202,12 +192,17 @@ class _PickDateState extends State<PickDate>
   _handleGoArrowButton() {
     if ((_focusStartDayIndex == 0) && !isVisibleNowFor) {
       _handleUntilButton();
-      //flushbar.show(context);
     } else {
       _getPickedDate();
-      String pickedDate =
-          '$startDay $startMonth $startHour ${endHour == '' ? '' : '-'} $endDay $endMonth $endHour';
-      Navigator.pushNamed(context, "/placescreen/${widget.title}/$pickedDate");
+      if (time.checkDate(
+          startMonth, startDay, startHour, endMonth, endDay, endHour)) {
+        String pickedDate =
+            '$startDay $startMonth $startHour ${endHour == '' ? '' : '-'} $endDay $endMonth $endHour';
+        Navigator.pushNamed(
+            context, "/placescreen/${widget.title}/$pickedDate");
+      } else {
+        flushbar.show(context);
+      }
     }
   }
 
@@ -275,7 +270,6 @@ class _PickDateState extends State<PickDate>
                         duration: Duration(milliseconds: 300),
                         child: isVisibleStartMonthList
                             ? Container(
-                                //color: Colors.white,
                                 height: 60,
                                 child: CustomScroll(
                                   inputText: startMonthList,
@@ -309,7 +303,6 @@ class _PickDateState extends State<PickDate>
                         duration: Duration(milliseconds: 300),
                         child: isVisibleStartHourList
                             ? Container(
-                                //color: Colors.white,
                                 height: 60,
                                 child: CustomScroll(
                                   inputText: startHourList,
@@ -422,7 +415,6 @@ class _PickDateState extends State<PickDate>
                         duration: Duration(milliseconds: 300),
                         child: isVisibleEndMonthList
                             ? Container(
-                                //color: Colors.white,
                                 height: 60,
                                 child: CustomScroll(
                                   inputText: endMonthList,

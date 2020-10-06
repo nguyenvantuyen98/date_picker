@@ -116,6 +116,26 @@ class Time {
     return '';
   }
 
+  int decodeMonth(String month) {
+    if (month == 'Jan') return 1;
+    if (month == 'Feb') return 2;
+    if (month == 'Mar') return 3;
+    if (month == 'Apr') return 4;
+    if (month == 'May') return 5;
+    if (month == 'Jun') return 6;
+    if (month == 'Jul') return 7;
+    if (month == 'Aug') return 8;
+    if (month == 'Sep') return 9;
+    if (month == 'Oct') return 10;
+    if (month == 'Nov') return 11;
+    if (month == 'Dec') return 12;
+    return 0;
+  }
+
+  int decodeDay(String day) {
+    return int.parse(day.substring(2));
+  }
+
   DateTime roundTimeEach15Minutes() {
     DateTime now = DateTime.now();
     if (now.minute == 0 ||
@@ -126,6 +146,32 @@ class Time {
     if (now.minute < 30) return now.add(Duration(minutes: 30 - now.minute));
     if (now.minute < 45) return now.add(Duration(minutes: 45 - now.minute));
     return now.add(Duration(minutes: 60 - now.minute));
+  }
+
+  List<int> decodeHour(String hour) {
+    if (hour == 'AnyTime') {
+      return [0, 0];
+    }
+    if (hour == 'Morning') {
+      return [6, 0];
+    }
+    if (hour == 'Afternoon') {
+      return [13, 0];
+    }
+    if (hour == 'Evening') {
+      return [17, 0];
+    }
+    if (hour == 'Night') {
+      return [21, 0];
+    }
+    bool isPM = hour[hour.length - 2] == 'p';
+    hour = hour.substring(0, hour.length - 2);
+    List<String> split = hour.split(':');
+
+    return [
+      isPM ? int.parse(split[0]) + 12 : int.parse(split[0]),
+      int.parse(split[1])
+    ];
   }
 
   static List<String> hoursList = [
@@ -140,5 +186,21 @@ class Time {
   ];
 
   bool checkDate(String startMonth, String startDay, String startHour,
-      String endMonth, String endDay, String endHour) {}
+      String endMonth, String endDay, String endHour) {
+    if (endHour == '') {
+      return true;
+    }
+
+    print('startMonth: $startMonth');
+    print('int month: ${decodeMonth(startMonth)}');
+    print('startDay: $startDay');
+    print('int day: ${decodeDay(startDay)}');
+    print('startHour: $startHour');
+    print('decode hour: ${decodeHour(startHour)}');
+    print('endMonth: $endMonth');
+    print('endDay: $endDay');
+    print('endHour: $endHour');
+
+    return true;
+  }
 }
