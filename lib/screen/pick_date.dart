@@ -147,13 +147,24 @@ class _PickDateState extends State<PickDate>
         !isVibileNowFor) {
       _handleUntilButton();
     } else if (_focusStartDayIndex >
-            startDayList.indexOf(endDayList[_focusEndDayIndex]) &&
+            (endDayList == []
+                ? startDayList.indexOf(endDayList[_focusEndDayIndex])
+                : 0) &&
         _focusStartMonthIndex >
-            startMonthList.indexOf(endMonthList[_focusEndMonthIndex])) {
-      flushbar.show(context);
+            (endMonthList == []
+                ? startMonthList.indexOf(endMonthList[_focusEndMonthIndex])
+                : 0)) {
+      if (!isPlusOrCloseButton) {
+        flushbar.show(context);
+      }
     } else {
       if (isVibileNowFor) {
-        Navigator.pushNamed(context, "/placescreen/${widget.title}");
+        var timeresult = [
+          [startDayList[1], startMonthList[0]],
+          ["Now"]
+        ];
+        Navigator.pushNamed(
+            context, "/placescreen/${widget.title}/${timeresult}");
       }
     }
   }

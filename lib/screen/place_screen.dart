@@ -4,8 +4,10 @@ import 'components/go_arrow_button.dart';
 
 class PlaceScreen extends StatelessWidget {
   final String title;
+  final List<List<String>> listtimeresult;
 
-  const PlaceScreen({Key key, this.title}) : super(key: key);
+  const PlaceScreen({Key key, this.title, this.listtimeresult})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +29,18 @@ class PlaceScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         fontSize: 40),
+                  ),
+                  TextField(
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30),
+                    decoration: InputDecoration(
+                      hintText: "Place",
+                      hintStyle: TextStyle(
+                        color: Color(0xFF232323),
+                      ),
+                    ),
                   ),
                 ],
               ),
