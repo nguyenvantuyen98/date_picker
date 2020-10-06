@@ -117,9 +117,21 @@ class _PickDateState extends State<PickDate>
   }
 
   _getEndListTime() {
-    endDayList = startDayList.sublist(_focusStartDayIndex);
-    endMonthList = startMonthList.sublist(_focusStartMonthIndex);
-    endHourList = startHourList.sublist(_focusStartHourIndex + 1);
+    if (_focusStartHourIndex == startHourList.length - 1) {
+      endHourList = newDayHourList;
+      endDayList = startDayList.sublist(_focusStartDayIndex + 1);
+      if (linkToStartMonthList[_focusStartDayIndex] !=
+          linkToStartMonthList[_focusStartDayIndex + 1]) {
+        endMonthList = startMonthList.sublist(_focusStartMonthIndex + 1);
+      } else {
+        endMonthList = startMonthList.sublist(_focusStartMonthIndex);
+      }
+    } else {
+      endHourList = startHourList.sublist(_focusStartHourIndex + 1);
+      endDayList = startDayList.sublist(_focusStartDayIndex);
+      endMonthList = startMonthList.sublist(_focusStartMonthIndex);
+    }
+
     linkToEndMonthList = linkToStartMonthList.sublist(_focusStartDayIndex);
     linkToEndDayList = linkToStartDayList.sublist(_focusStartMonthIndex);
     currentMonthInEndMonthList = linkToEndDayList[0];
