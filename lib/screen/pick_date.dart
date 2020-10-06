@@ -16,6 +16,7 @@ class PickDate extends StatefulWidget {
 
 class _PickDateState extends State<PickDate>
     with SingleTickerProviderStateMixin {
+  ScrollController scrollController = ScrollController();
   Time time = Time();
 
   List<String> startDayList;
@@ -28,6 +29,9 @@ class _PickDateState extends State<PickDate>
   List<String> endMonthList;
   List<int> linkToEndDayList;
   List<String> endHourList;
+
+  List<String> newDayHourList;
+  List<String> currentHourList;
 
   int currentMonthInStartMonthList;
   int currentMonthInStartDayList;
@@ -43,6 +47,7 @@ class _PickDateState extends State<PickDate>
     startHourList = time.getHourList();
     currentMonthInStartMonthList = linkToStartDayList[0];
     currentMonthInStartDayList = linkToStartMonthList[0];
+    newDayHourList = time.getHourList(true);
   }
 
   bool isVibileNowFor = false;
@@ -105,7 +110,8 @@ class _PickDateState extends State<PickDate>
   _getEndListTime() {
     endDayList = startDayList.sublist(_focusStartDayIndex);
     endMonthList = startMonthList.sublist(_focusStartMonthIndex);
-    endHourList = startHourList.sublist(_focusStartHourIndex);
+    endHourList = startHourList.sublist(_focusStartHourIndex + 1);
+    currentHourList = List.from(endHourList);
     linkToEndMonthList = linkToStartMonthList.sublist(_focusStartDayIndex);
     linkToEndDayList = linkToStartDayList.sublist(_focusStartMonthIndex);
     currentMonthInEndMonthList = linkToEndDayList[0];
@@ -140,6 +146,8 @@ class _PickDateState extends State<PickDate>
         }
       }
     });
+    scrollController.animateTo(MediaQuery.of(context).size.height * .13 + 60,
+        duration: Duration(seconds: 1), curve: Curves.ease);
   }
 
   _handleGoArrowButton() {
@@ -162,9 +170,9 @@ class _PickDateState extends State<PickDate>
         var timeresult = [
           [startDayList[1], startMonthList[0]],
           ["Now"]
-        ];
+        ].toString();
         Navigator.pushNamed(
-            context, "/placescreen/${widget.title}/${timeresult}");
+            context, "/placescreen/${widget.title}/$timeresult");
       }
     }
   }
@@ -188,7 +196,7 @@ class _PickDateState extends State<PickDate>
               Expanded(
                 child: Stack(
                   children: [
-                    ListView(children: [
+                    ListView(controller: scrollController, children: [
                       Container(
                         height: MediaQuery.of(context).size.height * .13,
                       ),
@@ -342,6 +350,15 @@ class _PickDateState extends State<PickDate>
                                     linkingList: linkToEndMonthList,
                                     key: endDayKey,
                                     linkCallBack: (index, link) {
+                                      if (index != 0) {
+                                        setState(() {
+                                          endHourList = newDayHourList;
+                                        });
+                                      } else
+                                        setState(() {
+                                          endHourList = currentHourList;
+                                        });
+
                                       _focusEndDayIndex = index;
                                       _handleVisibleMonthList();
                                       currentMonthInEndDayList = link;

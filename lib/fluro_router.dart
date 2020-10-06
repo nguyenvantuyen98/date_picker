@@ -18,7 +18,7 @@ class FluroRouter {
       Handler(handlerFunc: (context, Map<String, dynamic> params) {
     return PlaceScreen(
       title: params["title"][0],
-      listtimeresult: (params["listtimeresult"][0]) as List,
+      listtimeresult: (params["listtimeresult"][0]),
     );
   });
   void setRouter() {

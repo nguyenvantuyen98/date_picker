@@ -4,7 +4,7 @@ import 'components/go_arrow_button.dart';
 
 class PlaceScreen extends StatelessWidget {
   final String title;
-  final List<List<String>> listtimeresult;
+  final String listtimeresult;
 
   const PlaceScreen({Key key, this.title, this.listtimeresult})
       : super(key: key);
