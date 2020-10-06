@@ -82,7 +82,7 @@ class Time {
   String formatTime(DateTime dateTime) {
     String hours = '${dateTime.hour}'.padLeft(2, '0');
     String minutes = '${dateTime.minute}'.padLeft(2, '0');
-    return '$hours:$minutes';
+    return '$hours:$minutes${dateTime.hour < 12 ? 'am' : 'pm'}';
   }
 
   String getWeekDay(DateTime dateTime) {

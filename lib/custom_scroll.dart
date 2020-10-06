@@ -78,6 +78,9 @@ class CustomScrollState extends State<CustomScroll> {
         },
       ),
       onNotification: (notification) {
+        if (notification is OverscrollIndicatorNotification) {
+          notification.disallowGlow();
+        }
         if (notification is ScrollEndNotification) {
           double stopPosition = notification.metrics.pixels;
           int index = getIndex(stopPosition);
@@ -103,7 +106,6 @@ class CustomScrollState extends State<CustomScroll> {
       if (position < locationList[index].end) break;
       index++;
     }
-    assert(index < 366);
     return index < widget.textItemList.length - 1
         ? index
         : widget.textItemList.length - 1;
