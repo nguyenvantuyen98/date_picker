@@ -57,7 +57,8 @@ class _PickDateState extends State<PickDate>
 
   bool isVisibleNowFor = false;
 
-  bool isNewDay = false;
+  bool isNewStartDay = false;
+  bool isNewEndDay = false;
 
   bool isVisibleStartDayList = true;
   bool isVisibleUntilButton = true;
@@ -107,7 +108,21 @@ class _PickDateState extends State<PickDate>
   }
 
   _getEndListTime() {
-    if (_focusStartHourIndex == startHourList.length - 1) {
+    if (_focusStartHourIndex ==
+            (isNewStartDay
+                ? (newDayHourList.length - 1)
+                : (startHourList.length - 1)) &&
+        _focusStartDayIndex == startDayList.length - 1 &&
+        _focusStartMonthIndex == startMonthList.length - 1) {
+      endHourList = isNewStartDay
+          ? newDayHourList.sublist(_focusStartHourIndex)
+          : startHourList.sublist(_focusStartHourIndex);
+      endDayList = startDayList.sublist(_focusStartDayIndex);
+      endMonthList = startMonthList.sublist(_focusStartMonthIndex);
+    } else if (_focusStartHourIndex ==
+        (isNewStartDay
+            ? (newDayHourList.length - 1)
+            : (startHourList.length - 1))) {
       endHourList = newDayHourList;
       endDayList = startDayList.sublist(_focusStartDayIndex + 1);
       if (linkToStartMonthList[_focusStartDayIndex] !=
@@ -117,7 +132,9 @@ class _PickDateState extends State<PickDate>
         endMonthList = startMonthList.sublist(_focusStartMonthIndex);
       }
     } else {
-      endHourList = startHourList.sublist(_focusStartHourIndex + 1);
+      endHourList = isNewStartDay
+          ? newDayHourList.sublist(_focusStartHourIndex + 1)
+          : startHourList.sublist(_focusStartHourIndex + 1);
       endDayList = startDayList.sublist(_focusStartDayIndex);
       endMonthList = startMonthList.sublist(_focusStartMonthIndex);
     }
@@ -172,11 +189,15 @@ class _PickDateState extends State<PickDate>
     } else {
       startDay = startDayList[_focusStartDayIndex];
       startMonth = startMonthList[_focusStartMonthIndex];
-      startHour = startHourList[_focusStartHourIndex];
+      startHour = isNewStartDay
+          ? newDayHourList[_focusStartHourIndex]
+          : startHourList[_focusStartHourIndex];
       if (endDayList != null) {
         endDay = endDayList[_focusEndDayIndex];
         endMonth = endMonthList[_focusEndMonthIndex];
-        endHour = endHourList[_focusEndHourIndex];
+        endHour = isNewEndDay
+            ? newDayHourList[_focusEndHourIndex]
+            : endHourList[_focusEndHourIndex];
       } else {
         endDay = '';
         endMonth = '';
@@ -247,6 +268,17 @@ class _PickDateState extends State<PickDate>
                                   key: startDayKey,
                                   linkCallBack: (index, link) {
                                     _focusStartDayIndex = index;
+                                    if (index > 1) {
+                                      if (isNewStartDay != true) {
+                                        setState(() {
+                                          isNewStartDay = true;
+                                        });
+                                      }
+                                    } else if (isNewStartDay == true) {
+                                      setState(() {
+                                        isNewStartDay = false;
+                                      });
+                                    }
                                     currentMonthInStartDayList = link;
                                     if (currentMonthInStartDayList !=
                                         currentMonthInStartMonthList) {
@@ -296,20 +328,34 @@ class _PickDateState extends State<PickDate>
                                           .quickFocusOn(newIndex);
                                     }
                                   },
-                                ))
+                                ),
+                              )
                             : SizedBox(),
                       ),
                       AnimatedSwitcher(
                         duration: Duration(milliseconds: 300),
                         child: isVisibleStartHourList
-                            ? Container(
-                                height: 60,
-                                child: CustomScroll(
-                                  inputText: startHourList,
-                                  haveLinkingList: false,
-                                  callBack: (index) =>
-                                      (_focusStartHourIndex = index),
-                                ))
+                            ? AnimatedSwitcher(
+                                duration: Duration(milliseconds: 300),
+                                child: isNewStartDay
+                                    ? Container(
+                                        height: 60,
+                                        child: CustomScroll(
+                                          inputText: newDayHourList,
+                                          haveLinkingList: false,
+                                          key: Key('newStartDayHourList'),
+                                          callBack: (index) =>
+                                              (_focusStartHourIndex = index),
+                                        ))
+                                    : Container(
+                                        height: 60,
+                                        child: CustomScroll(
+                                          inputText: startHourList,
+                                          haveLinkingList: false,
+                                          key: Key('startDayHourList'),
+                                          callBack: (index) =>
+                                              (_focusStartHourIndex = index),
+                                        )))
                             : SizedBox(),
                       ),
                       AnimatedSwitcher(
@@ -380,14 +426,14 @@ class _PickDateState extends State<PickDate>
                                     key: endDayKey,
                                     linkCallBack: (index, link) {
                                       if (index != 0) {
-                                        if (isNewDay != true) {
+                                        if (isNewEndDay != true) {
                                           setState(() {
-                                            isNewDay = true;
+                                            isNewEndDay = true;
                                           });
                                         }
-                                      } else if (isNewDay == true) {
+                                      } else if (isNewEndDay == true) {
                                         setState(() {
-                                          isNewDay = false;
+                                          isNewEndDay = false;
                                         });
                                       }
 
@@ -451,7 +497,7 @@ class _PickDateState extends State<PickDate>
                         child: isVisibleEndHourList
                             ? AnimatedSwitcher(
                                 duration: Duration(milliseconds: 300),
-                                child: isNewDay
+                                child: isNewEndDay
                                     ? Container(
                                         height: 60,
                                         child: CustomScroll(
