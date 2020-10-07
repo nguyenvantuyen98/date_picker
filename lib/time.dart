@@ -216,9 +216,10 @@ class Time {
     if (endMonthInt == now.month && endDayInt < now.day ||
         endMonthInt < now.month) endYear++;
     print('DateTimeCompare');
-    return DateTime(
-            startYear, startMonthInt, startDayInt, startHourInt, startMinuteInt)
-        .isBefore(DateTime(
-            endYear, endMonthInt, endDayInt, endHourInt, endMinuteInt));
+    DateTime startDate = DateTime(
+        startYear, startMonthInt, startDayInt, startHourInt, startMinuteInt);
+    DateTime endDate =
+        DateTime(endYear, endMonthInt, endDayInt, endHourInt, endMinuteInt);
+    return startDate.isBefore(endDate) || startDate == endDate;
   }
 }
