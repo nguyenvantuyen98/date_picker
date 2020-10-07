@@ -145,6 +145,7 @@ class _PickDateState extends State<PickDate>
   }
 
   List<String> filter(List<String> endHourList) {
+    if (endHourList[0] == 'Anytime') return endHourList;
     List<int> endTime = time.decodeHour(endHourList[0]);
     int endHour = endTime[0];
     int endMinute = endTime[1];
@@ -255,6 +256,10 @@ class _PickDateState extends State<PickDate>
   GlobalKey<CustomScrollState> startMonthKey = GlobalKey();
   GlobalKey<CustomScrollState> endDayKey = GlobalKey();
   GlobalKey<CustomScrollState> endMonthKey = GlobalKey();
+  GlobalKey<CustomScrollState> startHourKey = GlobalKey();
+  GlobalKey<CustomScrollState> startNewHourKey = GlobalKey();
+  GlobalKey<CustomScrollState> endHourKey = GlobalKey();
+  GlobalKey<CustomScrollState> endNewHourKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -367,7 +372,7 @@ class _PickDateState extends State<PickDate>
                                         child: CustomScroll(
                                           inputText: newDayHourList,
                                           haveLinkingList: false,
-                                          key: Key('newStartDayHourList'),
+                                          key: startNewHourKey,
                                           callBack: (index) =>
                                               (_focusStartHourIndex = index),
                                         ))
@@ -376,7 +381,7 @@ class _PickDateState extends State<PickDate>
                                         child: CustomScroll(
                                           inputText: startHourList,
                                           haveLinkingList: false,
-                                          key: Key('startDayHourList'),
+                                          key: startHourKey,
                                           callBack: (index) =>
                                               (_focusStartHourIndex = index),
                                         )))
@@ -526,7 +531,7 @@ class _PickDateState extends State<PickDate>
                                         height: 60,
                                         child: CustomScroll(
                                             inputText: newDayHourList,
-                                            key: Key('newDayHourList'),
+                                            key: endNewHourKey,
                                             haveLinkingList: false,
                                             callBack: (index) {
                                               _focusEndHourIndex = index;
@@ -535,7 +540,7 @@ class _PickDateState extends State<PickDate>
                                         height: 60,
                                         child: CustomScroll(
                                             inputText: endHourList,
-                                            key: Key('endHourList'),
+                                            key: endHourKey,
                                             haveLinkingList: false,
                                             callBack: (index) {
                                               _focusEndHourIndex = index;
