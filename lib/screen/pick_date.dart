@@ -136,23 +136,41 @@ class _PickDateState extends State<PickDate>
         endMonthList = startMonthList.sublist(_focusStartMonthIndex);
       }
     } else {
-      endHourList = isNewStartDay
-          ? newDayHourList[_focusStartHourIndex].contains('n') ||
-                  newDayHourList[_focusStartHourIndex].contains('N')
-              ? newDayHourList.sublist(_focusStartHourIndex)
-              : newDayHourList.sublist(_focusStartHourIndex + 1)
-          : startHourList[_focusStartHourIndex].contains('n') ||
-                  startHourList[_focusStartHourIndex].contains('N')
-              ? startHourList.sublist(_focusStartHourIndex)
-              : startHourList.sublist(_focusStartHourIndex + 1);
       endDayList = startDayList.sublist(_focusStartDayIndex);
       endMonthList = startMonthList.sublist(_focusStartMonthIndex);
+      endHourList = isNewStartDay
+          ? newDayHourList.sublist(_focusStartHourIndex)
+          : startHourList.sublist(_focusStartHourIndex);
+
+      endHourList = filter(endHourList);
     }
 
     linkToEndMonthList = linkToStartMonthList.sublist(_focusStartDayIndex);
     linkToEndDayList = linkToStartDayList.sublist(_focusStartMonthIndex);
     currentMonthInEndMonthList = linkToEndDayList[0];
     currentMonthInEndDayList = linkToEndMonthList[0];
+  }
+
+  List<String> filter(List<String> endHourList) {
+    List<int> endTime = time.decodeHour(endHourList[0]);
+    int endHour = endTime[0];
+    int endMinute = endTime[1];
+    List<String> newEndHourList = [];
+    print('endHour = $endHour');
+    for (int i = 0; i < endHourList.length; i++) {
+      List<int> timeDecode = time.decodeHour(endHourList[i]);
+      int hourDecode = timeDecode[0];
+      int minuteDecode = timeDecode[1];
+      print('${endHourList[i]} decoded = $hourDecode');
+      if (hourDecode >= endHour && endMinute != minuteDecode) {
+        newEndHourList.add(endHourList[i]);
+      } else {
+        print('deleted ${endHourList[i]}');
+      }
+    }
+    if (endHourList[0].contains('n') || endHourList[0].contains('N'))
+      newEndHourList.insert(0, endHourList[0]);
+    return newEndHourList;
   }
 
   _handleUntilButton() {
@@ -231,9 +249,10 @@ class _PickDateState extends State<PickDate>
             '$startDay $startMonth $startHour ${endHour == '' ? '' : '-'} $endDay $endMonth $endHour';
         Navigator.pushNamed(
             context, "/placescreen/${widget.title}/$pickedDate");
-      } else {
-        flushbar.show(context);
       }
+      // else {
+      //   flushbar.show(context);
+      // }
     }
   }
 

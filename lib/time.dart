@@ -168,7 +168,7 @@ class Time {
     }
     bool isPM = hour[hour.length - 2] == 'p';
     hour = hour.substring(0, hour.length - 2);
-    List<String> split = hour.contains(':') ? hour.split(':') : [hour[0], '0'];
+    List<String> split = hour.contains(':') ? hour.split(':') : [hour, '0'];
     if (split[0] == '12') isPM = false;
     return [
       isPM ? int.parse(split[0]) + 12 : int.parse(split[0]),

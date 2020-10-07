@@ -48,3 +48,4 @@ lib/custom_scroll_widget.dart
 lib/my_time.dart
 lib/day_month_widget.dart
 lib/custom_scroll_widgets
+android/app/key.jks
