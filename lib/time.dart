@@ -187,8 +187,15 @@ class Time {
     "8hrs"
   ];
 
-  bool checkDate(String startMonth, String startDay, String startHour,
-      String endMonth, String endDay, String endHour) {
+  bool checkDate(List<String> timePicked) {
+    String startMonth = timePicked[0];
+    String startDay = timePicked[1];
+    String startHour = timePicked[2];
+
+    String endMonth = timePicked[3];
+    String endDay = timePicked[4];
+    String endHour = timePicked[5];
+
     print('startMonth: $startMonth');
     print('startDay: $startDay');
     print('startHour: $startHour');

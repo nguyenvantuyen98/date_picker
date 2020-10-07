@@ -31,13 +31,6 @@ class _PickDateState extends State<PickDate>
 
   List<String> newDayHourList;
 
-  String startDay;
-  String startMonth;
-  String startHour;
-  String endDay;
-  String endMonth;
-  String endHour;
-
   int currentMonthInStartMonthList;
   int currentMonthInStartDayList;
   int currentMonthInEndMonthList;
@@ -156,16 +149,12 @@ class _PickDateState extends State<PickDate>
     int endHour = endTime[0];
     int endMinute = endTime[1];
     List<String> newEndHourList = [];
-    print('endHour = $endHour');
     for (int i = 0; i < endHourList.length; i++) {
       List<int> timeDecode = time.decodeHour(endHourList[i]);
       int hourDecode = timeDecode[0];
       int minuteDecode = timeDecode[1];
-      print('${endHourList[i]} decoded = $hourDecode');
       if (hourDecode >= endHour && endMinute != minuteDecode) {
         newEndHourList.add(endHourList[i]);
-      } else {
-        print('deleted ${endHourList[i]}');
       }
     }
     if (endHourList[0].contains('n') || endHourList[0].contains('N'))
@@ -205,15 +194,22 @@ class _PickDateState extends State<PickDate>
         duration: Duration(seconds: 1), curve: Curves.ease);
   }
 
-  void _getPickedDate() {
+  List<String> _getPickedDate() {
+    String startDay;
+    String startMonth;
+    String startHour;
+    String endDay;
+    String endMonth;
+    String endHour;
     if (isVisibleNowFor) {
       startDay = 'Today';
       startMonth = startMonthList[_focusStartMonthIndex];
       startHour = 'Now';
-      endDay = '';
-      endMonth = '';
-      endHour = time.formatTime(
-          DateTime.now().add(Duration(hours: _focusHourListIndex + 1)));
+      DateTime nextTime =
+          DateTime.now().add(Duration(hours: _focusHourListIndex + 1));
+      endDay = time.formatDay(nextTime);
+      endMonth = time.getMonth(nextTime.month);
+      endHour = time.formatTime(nextTime);
     } else {
       startDay = startDayList[_focusStartDayIndex];
       startMonth = startMonthList[_focusStartMonthIndex];
@@ -232,27 +228,26 @@ class _PickDateState extends State<PickDate>
         endHour = '';
       }
     }
+    return [startMonth, startDay, startHour, endMonth, endDay, endHour];
   }
 
   _handleGoArrowButton() {
     if ((_focusStartDayIndex == 0) && !isVisibleNowFor) {
       _handleUntilButton();
     } else {
-      _getPickedDate();
-      if (time.checkDate(
-          startMonth, startDay, startHour, endMonth, endDay, endHour)) {
-        if (startDay == endDay && startMonth == endMonth) {
-          endDay = '';
-          endMonth = '';
+      List<String> timePicked = _getPickedDate();
+      if (time.checkDate(timePicked)) {
+        if (timePicked[1] == timePicked[4] && timePicked[0] == timePicked[3]) {
+          timePicked[4] = '';
+          timePicked[3] = '';
         }
         String pickedDate =
-            '$startDay $startMonth $startHour ${endHour == '' ? '' : '-'} $endDay $endMonth $endHour';
+            '${timePicked[1]} ${timePicked[0]} ${timePicked[2]} ${timePicked[5] == '' ? '' : '-'} ${timePicked[4]} ${timePicked[3]} ${timePicked[5]}';
         Navigator.pushNamed(
             context, "/placescreen/${widget.title}/$pickedDate");
+      } else {
+        flushbar.show(context);
       }
-      // else {
-      //   flushbar.show(context);
-      // }
     }
   }
 
