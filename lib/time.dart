@@ -168,8 +168,9 @@ class Time {
     }
     bool isPM = hour[hour.length - 2] == 'p';
     hour = hour.substring(0, hour.length - 2);
-    List<String> split = hour.split(':');
-
+    print('hour = $hour');
+    List<String> split = hour.contains(':') ? hour.split(':') : [hour[0], '0'];
+    print('split = $split');
     return [
       isPM ? int.parse(split[0]) + 12 : int.parse(split[0]),
       int.parse(split[1])
@@ -189,36 +190,35 @@ class Time {
 
   bool checkDate(String startMonth, String startDay, String startHour,
       String endMonth, String endDay, String endHour) {
-    if (startHour == 'Now' || endHour == '' || endDay == '') {
+    print('startMonth: $startMonth');
+    print('startDay: $startDay');
+    print('startHour: $startHour');
+    print('endMonth: $endMonth');
+    print('endDay: $endDay');
+    print('endHour: $endHour');
+    if (startHour == 'Now' || endHour == '') {
+      print("startHour == 'Now' || endHour == ''");
       return true;
     }
-    int startDayInt = decodeDay(startDay);
-    int endDayInt = decodeDay(endDay);
-    if (startMonth == endMonth &&
-        endDayInt < now.day &&
-        startDayInt < endDayInt) {
-      return false;
-    }
-    int startMonthInt = decodeMonth(startMonth);
-    int endMonthInt = decodeMonth(endMonth);
+
     List<int> startHourDecode = decodeHour(startHour);
     List<int> endHourDecode = decodeHour(endHour);
     int startHourInt = startHourDecode[0];
     int startMinuteInt = startHourDecode[1];
     int endHourInt = endHourDecode[0];
     int endMinuteInt = endHourDecode[1];
+    int startDayInt = decodeDay(startDay);
+    int endDayInt = decodeDay(endDay);
+    int startMonthInt = decodeMonth(startMonth);
+    int endMonthInt = decodeMonth(endMonth);
+    int startYear = now.year;
+    int endYear = now.year;
+    if (startMonthInt == now.month && startDayInt < now.day) startYear++;
+    if (endMonthInt == now.month && endDayInt < now.day) endYear++;
+    print('DateTimeCompare');
     return DateTime(
-            now.year, startMonthInt, startDayInt, startHourInt, startMinuteInt)
+            startYear, startMonthInt, startDayInt, startHourInt, startMinuteInt)
         .isBefore(DateTime(
-            now.year, endMonthInt, endDayInt, endHourInt, endMinuteInt));
-    // print('startMonth: $startMonth');
-    // print('int month: ${decodeMonth(startMonth)}');
-    // print('startDay: $startDay');
-    // print('int day: ${decodeDay(startDay)}');
-    // print('startHour: $startHour');
-    // print('decode hour: ${decodeHour(startHour)}');
-    // print('endMonth: $endMonth');
-    // print('endDay: $endDay');
-    // print('endHour: $endHour');
+            endYear, endMonthInt, endDayInt, endHourInt, endMinuteInt));
   }
 }

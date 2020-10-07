@@ -204,10 +204,6 @@ class _PickDateState extends State<PickDate>
         endHour = '';
       }
     }
-    if (startDay == endDay && startMonth == endMonth) {
-      endDay = '';
-      endMonth = '';
-    }
   }
 
   _handleGoArrowButton() {
@@ -217,6 +213,10 @@ class _PickDateState extends State<PickDate>
       _getPickedDate();
       if (time.checkDate(
           startMonth, startDay, startHour, endMonth, endDay, endHour)) {
+        if (startDay == endDay && startMonth == endMonth) {
+          endDay = '';
+          endMonth = '';
+        }
         String pickedDate =
             '$startDay $startMonth $startHour ${endHour == '' ? '' : '-'} $endDay $endMonth $endHour';
         Navigator.pushNamed(
