@@ -17,8 +17,8 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       //home: HomePage(),
-      initialRoute: "/pickdate",
-      //initialRoute: "/",
+      // initialRoute: "/pickdate",
+      initialRoute: "/",
       onGenerateRoute: FluroRouter.router.generator,
       //home: HomePage(),
     );

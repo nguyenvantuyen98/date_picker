@@ -137,8 +137,14 @@ class _PickDateState extends State<PickDate>
       }
     } else {
       endHourList = isNewStartDay
-          ? newDayHourList.sublist(_focusStartHourIndex + 1)
-          : startHourList.sublist(_focusStartHourIndex + 1);
+          ? newDayHourList[_focusStartHourIndex].contains('n') ||
+                  newDayHourList[_focusStartHourIndex].contains('N')
+              ? newDayHourList.sublist(_focusStartHourIndex)
+              : newDayHourList.sublist(_focusStartHourIndex + 1)
+          : startHourList[_focusStartHourIndex].contains('n') ||
+                  startHourList[_focusStartHourIndex].contains('N')
+              ? startHourList.sublist(_focusStartHourIndex)
+              : startHourList.sublist(_focusStartHourIndex + 1);
       endDayList = startDayList.sublist(_focusStartDayIndex);
       endMonthList = startMonthList.sublist(_focusStartMonthIndex);
     }
@@ -188,8 +194,8 @@ class _PickDateState extends State<PickDate>
       startHour = 'Now';
       endDay = '';
       endMonth = '';
-      endHour = time
-          .formatTime(DateTime.now().add(Duration(hours: _focusHourListIndex)));
+      endHour = time.formatTime(
+          DateTime.now().add(Duration(hours: _focusHourListIndex + 1)));
     } else {
       startDay = startDayList[_focusStartDayIndex];
       startMonth = startMonthList[_focusStartMonthIndex];

@@ -168,8 +168,9 @@ class Time {
     }
     bool isPM = hour[hour.length - 2] == 'p';
     hour = hour.substring(0, hour.length - 2);
-    print('hour = $hour');
+    print('hour = $hour ans isPM = $isPM');
     List<String> split = hour.contains(':') ? hour.split(':') : [hour[0], '0'];
+    if (split[0] == '12') isPM = false;
     print('split = $split');
     return [
       isPM ? int.parse(split[0]) + 12 : int.parse(split[0]),
@@ -204,8 +205,10 @@ class Time {
     List<int> startHourDecode = decodeHour(startHour);
     List<int> endHourDecode = decodeHour(endHour);
     int startHourInt = startHourDecode[0];
+    print('startHour after decode = $startHourInt');
     int startMinuteInt = startHourDecode[1];
     int endHourInt = endHourDecode[0];
+    print('endHour after decode  = $endHourInt');
     int endMinuteInt = endHourDecode[1];
     int startDayInt = decodeDay(startDay);
     int endDayInt = decodeDay(endDay);
