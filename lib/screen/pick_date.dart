@@ -86,6 +86,10 @@ class _PickDateState extends State<PickDate>
         isVisibleStartHourList = true;
       } else {
         isVisibleStartHourList = false;
+        isPlusOrCloseButton = true;
+        isVisibleEndDayList = false;
+        isVisibleEndHourList = false;
+        isVisibleEndMonthList = false;
       }
       if (_focusStartDayIndex > 2) {
         isVisibleStartMonthList = true;
