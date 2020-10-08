@@ -225,29 +225,6 @@ class _PickDateState extends State<PickDate>
       endMonth = time.getMonth(nextTime.month);
       endHour = time.formatTime(nextTime);
     } else {
-      print('*********************************************\n');
-      print('startDayList = ${startDayList.length}');
-      print('_focusStartDayIndex = $_focusStartDayIndex');
-      print('');
-      print('startMonthList = ${startMonthList.length}');
-      print('_focusStartMonthIndex = $_focusStartMonthIndex');
-      print('');
-      print('isNewStartDay = $isNewStartDay');
-      print('_focusStartHourIndex = $_focusStartHourIndex');
-      print('newDayHourList = ${newDayHourList.length}');
-      print('startHourList = ${startHourList.length}');
-      print('');
-      print('endDayList = ${endDayList.length}');
-      print('_focusEndDayIndex = $_focusEndDayIndex');
-      print('');
-      print('endMonthList = ${endMonthList.length}');
-      print('_focusEndMonthIndex = $_focusEndMonthIndex');
-      print('');
-      print('isNewEndDay = $isNewEndDay');
-      print('_focusEndHourIndex = $_focusEndHourIndex');
-      print('newDayHourList = ${newDayHourList.length}');
-      print('endHourList = ${endHourList.length}');
-      print('*********************************************\n');
       startDay = startDayList[_focusStartDayIndex];
       startMonth = startMonthList[_focusStartMonthIndex];
       startHour = isNewStartDay
@@ -275,11 +252,12 @@ class _PickDateState extends State<PickDate>
       List<String> timePicked = _getPickedDate();
 
       if (time.checkDate(timePicked)) {
-        if (time.decodeDay(timePicked[1]) == time.decodeDay(timePicked[4]) &&
-            timePicked[0] == timePicked[3]) {
+        if (timePicked[2] == 'Now' ||
+            timePicked[1] == timePicked[4] && timePicked[0] == timePicked[3]) {
           timePicked[4] = '';
           timePicked[3] = '';
         }
+
         String pickedDate =
             '${timePicked[1]} ${timePicked[0]} ${timePicked[2]} ${timePicked[5] == '' ? '' : '-'} ${timePicked[4]} ${timePicked[3]} ${timePicked[5]}';
         Navigator.pushNamed(
