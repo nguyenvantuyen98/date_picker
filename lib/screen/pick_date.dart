@@ -86,8 +86,10 @@ class _PickDateState extends State<PickDate>
       }
       if (_focusStartDayIndex > 2) {
         isVisibleStartMonthList = true;
+        isNewStartDay = true;
       } else {
         isVisibleStartMonthList = false;
+        isNewStartDay = false;
       }
     });
   }
@@ -105,6 +107,7 @@ class _PickDateState extends State<PickDate>
   }
 
   _getEndListTime() {
+    // If choose the last day, last hour, endList start in the same
     if (_focusStartHourIndex ==
             (isNewStartDay
                 ? (newDayHourList.length - 1)
@@ -116,7 +119,9 @@ class _PickDateState extends State<PickDate>
           : startHourList.sublist(_focusStartHourIndex);
       endDayList = startDayList.sublist(_focusStartDayIndex);
       endMonthList = startMonthList.sublist(_focusStartMonthIndex);
-    } else if (_focusStartHourIndex ==
+    }
+    // if choose 11h45 of a day, endList start in the nextDay
+    else if (_focusStartHourIndex ==
         (isNewStartDay
             ? (newDayHourList.length - 1)
             : (startHourList.length - 1))) {
@@ -128,13 +133,15 @@ class _PickDateState extends State<PickDate>
       } else {
         endMonthList = startMonthList.sublist(_focusStartMonthIndex);
       }
-    } else {
+    }
+    // else
+    else {
       endDayList = startDayList.sublist(_focusStartDayIndex);
       endMonthList = startMonthList.sublist(_focusStartMonthIndex);
       endHourList = isNewStartDay
           ? newDayHourList.sublist(_focusStartHourIndex)
           : startHourList.sublist(_focusStartHourIndex);
-
+      // delete the wrong time, example: if choosing Afternoon, delete Anytime, Morning, 0am,0:15am,...13pm.
       endHourList = filter(endHourList);
     }
 
