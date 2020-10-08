@@ -166,7 +166,6 @@ class _PickDateState extends State<PickDate>
 
   _handleUntilButton() {
     setState(() {
-      _getEndListTime();
       if (_focusStartDayIndex == 0) {
         isVisibleStartDayList = false;
         isVisibleUntilButton = false;
@@ -175,8 +174,14 @@ class _PickDateState extends State<PickDate>
         isVisibleEndMonthList = false;
         isVisibleNowFor = true;
       } else {
+        _getEndListTime();
         isPlusOrCloseButton = !isPlusOrCloseButton;
         if (!isPlusOrCloseButton) {
+          _focusEndHourIndex = 0;
+          _focusEndDayIndex = 0;
+          _focusEndMonthIndex = 0;
+          isNewEndDay = false;
+
           if (_focusStartDayIndex < 3) {
             isVisibleEndDayList = true;
             isVisibleEndHourList = true;
