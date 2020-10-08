@@ -154,7 +154,8 @@ class _PickDateState extends State<PickDate>
       List<int> timeDecode = time.decodeHour(endHourList[i]);
       int hourDecode = timeDecode[0];
       int minuteDecode = timeDecode[1];
-      if (hourDecode >= endHour && endMinute != minuteDecode) {
+      if (hourDecode > endHour ||
+          hourDecode == endHour && endMinute != minuteDecode) {
         newEndHourList.add(endHourList[i]);
       }
     }
@@ -165,6 +166,7 @@ class _PickDateState extends State<PickDate>
 
   _handleUntilButton() {
     setState(() {
+      _getEndListTime();
       if (_focusStartDayIndex == 0) {
         isVisibleStartDayList = false;
         isVisibleUntilButton = false;
@@ -173,7 +175,6 @@ class _PickDateState extends State<PickDate>
         isVisibleEndMonthList = false;
         isVisibleNowFor = true;
       } else {
-        _getEndListTime();
         isPlusOrCloseButton = !isPlusOrCloseButton;
         if (!isPlusOrCloseButton) {
           if (_focusStartDayIndex < 3) {
@@ -212,6 +213,29 @@ class _PickDateState extends State<PickDate>
       endMonth = time.getMonth(nextTime.month);
       endHour = time.formatTime(nextTime);
     } else {
+      // print('*********************************************\n');
+      // print('startDayList = ${startDayList.length}');
+      // print('_focusStartDayIndex = $_focusStartDayIndex');
+      // print('');
+      // print('startMonthList = ${startMonthList.length}');
+      // print('_focusStartMonthIndex = $_focusStartMonthIndex');
+      // print('');
+      // print('isNewStartDay = $isNewStartDay');
+      // print('_focusStartHourIndex = $_focusStartHourIndex');
+      // print('newDayHourList = ${newDayHourList.length}');
+      // print('startHourList = ${startHourList.length}');
+      // print('');
+      // print('endDayList = ${endDayList.length}');
+      // print('_focusEndDayIndex = $_focusEndDayIndex');
+      // print('');
+      // print('endMonthList = ${endMonthList.length}');
+      // print('_focusEndMonthIndex = $_focusEndMonthIndex');
+      // print('');
+      // print('isNewEndDay = $isNewEndDay');
+      // print('_focusEndHourIndex = $_focusEndHourIndex');
+      // print('newDayHourList = ${newDayHourList.length}');
+      // print('endHourList = ${endHourList.length}');
+      // print('*********************************************\n');
       startDay = startDayList[_focusStartDayIndex];
       startMonth = startMonthList[_focusStartMonthIndex];
       startHour = isNewStartDay

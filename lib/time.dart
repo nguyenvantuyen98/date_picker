@@ -196,12 +196,12 @@ class Time {
     String endDay = timePicked[4];
     String endHour = timePicked[5];
 
-    print('startMonth: $startMonth');
-    print('startDay: $startDay');
-    print('startHour: $startHour');
-    print('endMonth: $endMonth');
-    print('endDay: $endDay');
-    print('endHour: $endHour');
+    // print('startMonth: $startMonth');
+    // print('startDay: $startDay');
+    // print('startHour: $startHour');
+    // print('endMonth: $endMonth');
+    // print('endDay: $endDay');
+    // print('endHour: $endHour');
     if (startHour == 'Now' || endHour == '') {
       print("startHour == 'Now' || endHour == ''");
       return true;
