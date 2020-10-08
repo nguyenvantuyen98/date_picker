@@ -261,12 +261,13 @@ class _PickDateState extends State<PickDate>
       _handleUntilButton();
     } else {
       List<String> timePicked = _getPickedDate();
-      if (time.decodeDay(timePicked[1]) == time.decodeDay(timePicked[4]) &&
-          timePicked[0] == timePicked[3]) {
-        timePicked[4] = '';
-        timePicked[3] = '';
-      }
+
       if (time.checkDate(timePicked)) {
+        if (time.decodeDay(timePicked[1]) == time.decodeDay(timePicked[4]) &&
+            timePicked[0] == timePicked[3]) {
+          timePicked[4] = '';
+          timePicked[3] = '';
+        }
         String pickedDate =
             '${timePicked[1]} ${timePicked[0]} ${timePicked[2]} ${timePicked[5] == '' ? '' : '-'} ${timePicked[4]} ${timePicked[3]} ${timePicked[5]}';
         Navigator.pushNamed(
