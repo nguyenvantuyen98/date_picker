@@ -84,12 +84,15 @@ class _PickDateState extends State<PickDate>
         isVisibleEndHourList = false;
         isVisibleEndMonthList = false;
       }
-      if (_focusStartDayIndex > 2) {
-        isVisibleStartMonthList = true;
+      if (_focusStartDayIndex > 1) {
         isNewStartDay = true;
       } else {
-        isVisibleStartMonthList = false;
         isNewStartDay = false;
+      }
+      if (_focusStartDayIndex > 2) {
+        isVisibleStartMonthList = true;
+      } else {
+        isVisibleStartMonthList = false;
       }
     });
   }
@@ -313,7 +316,7 @@ class _PickDateState extends State<PickDate>
                                   key: startDayKey,
                                   linkCallBack: (index, link) {
                                     _focusStartDayIndex = index;
-                                    if (index > 1) {
+                                    if (index >= 1) {
                                       if (isNewStartDay != true) {
                                         setState(() {
                                           isNewStartDay = true;
