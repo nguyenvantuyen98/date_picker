@@ -155,16 +155,16 @@ class Time {
       return [0, 0];
     }
     if (hour == 'Morning') {
-      return [6, 0];
+      return [5, 01];
     }
     if (hour == 'Afternoon') {
-      return [13, 0];
+      return [12, 01];
     }
     if (hour == 'Evening') {
-      return [17, 0];
+      return [17, 01];
     }
     if (hour == 'Night') {
-      return [21, 0];
+      return [19, 01];
     }
     bool isPM = hour[hour.length - 2] == 'p';
     hour = hour.substring(0, hour.length - 2);
@@ -177,7 +177,7 @@ class Time {
   }
 
   static List<String> hoursList = [
-    "1hr",
+    "1h",
     "2hrs",
     "3hrs",
     "4hrs",
@@ -208,6 +208,7 @@ class Time {
     }
     List<int> startHourDecode = decodeHour(startHour);
     List<int> endHourDecode = decodeHour(endHour);
+
     int startHourInt = startHourDecode[0];
     int startMinuteInt = startHourDecode[1];
     int endHourInt = endHourDecode[0];

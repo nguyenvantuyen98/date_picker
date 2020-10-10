@@ -11,8 +11,8 @@ class FluroRouter {
   });
   var pickDateHandler =
       Handler(handlerFunc: (context, Map<String, dynamic> params) {
-    return PickDate(title: params["title"][0]);
-    // return PickDate();
+    // return PickDate(title: params["title"][0]);
+    return PickDate();
   });
   var placeHandler =
       Handler(handlerFunc: (context, Map<String, dynamic> params) {
@@ -24,7 +24,7 @@ class FluroRouter {
   void setRouter() {
     router.define("/", handler: addTitleHandler);
     router.define("/pickdate/:title", handler: pickDateHandler);
-    // router.define("/pickdate", handler: pickDateHandler);
+    //router.define("/pickdate", handler: pickDateHandler);
     router.define("/placescreen/:title/:pickedDate",
         handler: placeHandler, transitionType: TransitionType.fadeIn);
   }

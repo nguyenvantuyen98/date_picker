@@ -1,5 +1,6 @@
 import 'package:date_picker/text_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 
 typedef void IndexCallBack(int index);
 typedef void LinkCallBack(int index, int link);
@@ -48,7 +49,8 @@ class CustomScrollState extends State<CustomScroll> {
       }
       for (TextItem textItem in widget.textItemList) {
         double start = maxPosition;
-        maxPosition += textItem.getSize(context).width + 20;
+        maxPosition +=
+            textItem.getSize(context).width + ScreenUtil().screenWidth * .085;
         locationList.add(Location(start, maxPosition));
       }
     });

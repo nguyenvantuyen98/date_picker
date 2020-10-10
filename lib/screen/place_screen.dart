@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 
 import 'components/go_arrow_button.dart';
 
@@ -13,50 +14,50 @@ class PlaceScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: buildAppBar(context),
       body: Padding(
-        padding: EdgeInsets.only(left: 40),
+        padding: EdgeInsets.only(left: ScreenUtil().screenWidth * .121),
         child: Column(
           children: [
             Expanded(
               child: ListView(
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * .13,
+                    height: ScreenUtil().screenHeight * .14,
                   ),
                   Text(
                     title,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        fontSize: 40),
+                        fontSize: ScreenUtil().screenHeight * .056),
                   ),
                   Text(
                     pickedDate,
                     style: TextStyle(
+                        height: 1.28,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        fontSize: 40),
+                        fontSize: ScreenUtil().screenHeight * .056),
                   ),
                   TextField(
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 30),
+                        fontSize: ScreenUtil().screenHeight * .056),
                     decoration: InputDecoration(
                       hintText: "Place",
                       hintStyle: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF232323),
-                        fontSize: 40,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .2,
+            Container(
+              height: ScreenUtil().screenHeight * 0.193,
               child: Align(
-                alignment: Alignment.center,
+                alignment: Alignment.topCenter,
                 child: GoArrowButton(
                   press: () {},
                 ),

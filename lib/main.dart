@@ -1,4 +1,5 @@
 import 'package:date_picker/fluro_router.dart';
+import 'package:date_picker/screen/pick_date.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,8 +17,9 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      //home: HomePage(),
-      // initialRoute: "/pickdate",
+
+      home: PickDate(),
+      //initialRoute: "/pickdate",
       initialRoute: "/",
       onGenerateRoute: FluroRouter.router.generator,
       //home: HomePage(),

@@ -1,14 +1,16 @@
 import 'package:date_picker/custom_scroll.dart';
 import 'package:date_picker/time.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import 'components/flush_bar.dart';
 import 'components/go_arrow_button.dart';
 
 class PickDate extends StatefulWidget {
   final String title;
 
-  const PickDate({Key key, this.title = "Hello World"}) : super(key: key);
+  const PickDate({Key key, this.title = "Everything"}) : super(key: key);
   @override
   _PickDateState createState() => _PickDateState();
 }
@@ -165,15 +167,44 @@ class _PickDateState extends State<PickDate>
       int hourDecode = timeDecode[0];
       int minuteDecode = timeDecode[1];
       if (hourDecode > endHour ||
-          hourDecode == endHour && endMinute != minuteDecode) {
+          hourDecode == endHour && endMinute < minuteDecode) {
         newEndHourList.add(endHourList[i]);
       }
     }
+    //Handle night range time
+    // if (endHourList[0] == 'Night') {
+    //     print("index can tim ${endHourList.indexOf("0am")}");
+    //     print("index can tim ${endHourList.indexOf("5am")}");
+    //     for (int i = endHourList.indexOf("0am");
+    //         i <= endHourList.indexOf("5am");
+    //         i++) {
+    //       newEndHourList.add(endHourList[i]);
+    //     }
+    //   }
     if (endHourList[0].contains('n') || endHourList[0].contains('N'))
       newEndHourList.insert(0, endHourList[0]);
     return newEndHourList;
   }
 
+  // List<String> filter(List<String> endHourList) {
+  //   if (endHourList[0] == 'Anytime') return endHourList;
+  //   List<int> endTime = time.decodeHour(endHourList[0]);
+  //   int endHour = endTime[0];
+  //   int endMinute = endTime[1];
+  //   List<String> newEndHourList = [];
+  //   for (int i = 0; i < endHourList.length; i++) {
+  //     List<int> timeDecode = time.decodeHour(endHourList[i]);
+  //     int hourDecode = timeDecode[0];
+  //     int minuteDecode = timeDecode[1];
+  //     if (hourDecode > endHour ||
+  //         hourDecode == endHour && endMinute != minuteDecode) {
+  //       newEndHourList.add(endHourList[i]);
+  //     }
+  //   }
+  //   if (endHourList[0].contains('n') || endHourList[0].contains('N'))
+  //     newEndHourList.insert(0, endHourList[0]);
+  //   return newEndHourList;
+  // }
   _handleUntilButton() {
     setState(() {
       if (_focusStartDayIndex == 0) {
@@ -207,8 +238,14 @@ class _PickDateState extends State<PickDate>
         }
       }
     });
-    scrollController.animateTo(MediaQuery.of(context).size.height * .13 + 60,
-        duration: Duration(seconds: 1), curve: Curves.ease);
+    isPlusOrCloseButton
+        ? scrollController.animateTo(0,
+            duration: Duration(seconds: 1), curve: Curves.ease)
+        : isVisibleStartMonthList
+            ? scrollController.animateTo(ScreenUtil().screenHeight * .3,
+                duration: Duration(seconds: 1), curve: Curves.ease)
+            : scrollController.animateTo(ScreenUtil().screenHeight * .14,
+                duration: Duration(seconds: 1), curve: Curves.ease);
   }
 
   List<String> _getPickedDate() {
@@ -245,6 +282,7 @@ class _PickDateState extends State<PickDate>
         endHour = '';
       }
     }
+    print([startMonth, startDay, startHour, endMonth, endDay, endHour]);
     return [startMonth, startDay, startHour, endMonth, endDay, endHour];
   }
 
@@ -282,12 +320,19 @@ class _PickDateState extends State<PickDate>
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: Size(1242, 2688));
+    print(
+        "screenWidth ${ScreenUtil().screenWidth}, screenheight ${ScreenUtil().screenHeight}");
+    print(
+        "screenWidthPx ${ScreenUtil().screenWidthPx}, screenheightPX ${ScreenUtil().screenHeightPx}");
+    print(
+        "scaleWidth ${ScreenUtil().scaleWidth}, scaleHeight ${ScreenUtil().scaleHeight}");
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: buildAppBar(context),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(left: 40),
+          padding: EdgeInsets.only(left: ScreenUtil().screenWidth * .121),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -296,19 +341,20 @@ class _PickDateState extends State<PickDate>
                   children: [
                     ListView(controller: scrollController, children: [
                       Container(
-                        height: MediaQuery.of(context).size.height * .13,
+                        height: ScreenUtil().screenHeight * .14,
                       ),
                       Text(
                         widget.title,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            fontSize: 40),
+                            fontSize: ScreenUtil().screenHeight * .056),
                       ),
                       isVisibleStartDayList
                           ? Container(
-                              height: 60,
-                              margin: EdgeInsets.only(top: 20),
+                              height: ScreenUtil().screenHeight * .065,
+                              margin: EdgeInsets.only(
+                                  top: ScreenUtil().screenHeight * .038),
                               child: CustomScroll(
                                   inputText: startDayList,
                                   haveLinkingList: true,
@@ -350,7 +396,9 @@ class _PickDateState extends State<PickDate>
                         duration: Duration(milliseconds: 300),
                         child: isVisibleStartMonthList
                             ? Container(
-                                height: 60,
+                                margin: EdgeInsets.only(
+                                    top: ScreenUtil().screenHeight * .029),
+                                height: ScreenUtil().screenHeight * .065,
                                 child: CustomScroll(
                                   inputText: startMonthList,
                                   haveLinkingList: true,
@@ -366,12 +414,14 @@ class _PickDateState extends State<PickDate>
                                           linkToStartDayList.length - 1) {
                                         start =
                                             linkToStartMonthList.length ~/ 2;
+                                        print("start ${start}");
                                       }
                                       int newIndex =
                                           linkToStartMonthList.indexOf(
                                               currentMonthInStartMonthList,
                                               start);
                                       newIndex = newIndex == 0 ? 3 : newIndex;
+                                      print("New index ${newIndex}");
                                       startDayKey.currentState
                                           .quickFocusOn(newIndex);
                                     }
@@ -387,7 +437,11 @@ class _PickDateState extends State<PickDate>
                                 duration: Duration(milliseconds: 300),
                                 child: isNewStartDay
                                     ? Container(
-                                        height: 60,
+                                        margin: EdgeInsets.only(
+                                          top: ScreenUtil().screenHeight * .029,
+                                        ),
+                                        height:
+                                            ScreenUtil().screenHeight * .065,
                                         child: CustomScroll(
                                           inputText: newDayHourList,
                                           haveLinkingList: false,
@@ -396,7 +450,11 @@ class _PickDateState extends State<PickDate>
                                               (_focusStartHourIndex = index),
                                         ))
                                     : Container(
-                                        height: 60,
+                                        margin: EdgeInsets.only(
+                                          top: ScreenUtil().screenHeight * .029,
+                                        ),
+                                        height:
+                                            ScreenUtil().screenHeight * .065,
                                         child: CustomScroll(
                                           inputText: startHourList,
                                           haveLinkingList: false,
@@ -411,13 +469,19 @@ class _PickDateState extends State<PickDate>
                         child: isVisibleNowFor
                             ? Align(
                                 alignment: Alignment.centerLeft,
-                                child: SizedBox(
-                                  height: 60,
-                                  child: Text("Now for",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          fontSize: 40)),
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      top: ScreenUtil().screenHeight * .022),
+                                  child: SizedBox(
+                                    height: ScreenUtil().screenHeight * .071,
+                                    child: Text("Now for",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            fontSize:
+                                                ScreenUtil().screenHeight *
+                                                    .056)),
+                                  ),
                                 ),
                               )
                             : SizedBox(),
@@ -426,7 +490,9 @@ class _PickDateState extends State<PickDate>
                         duration: Duration(milliseconds: 300),
                         child: isVisibleNowFor
                             ? Container(
-                                height: 50,
+                                height: ScreenUtil().screenHeight * .056,
+                                margin: EdgeInsets.only(
+                                    top: ScreenUtil().screenHeight * .03),
                                 child: CustomScroll(
                                   inputText: Time.hoursList,
                                   haveLinkingList: false,
@@ -438,24 +504,33 @@ class _PickDateState extends State<PickDate>
                             : SizedBox(),
                       ),
                       isVisibleUntilButton
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                IconButton(
-                                  icon: isPlusOrCloseButton
-                                      ? SvgPicture.asset(
-                                          "assets/icons/btn_plus.svg")
-                                      : SvgPicture.asset(
-                                          "assets/icons/btn_close.svg"),
-                                  onPressed: () {
-                                    _handleUntilButton();
-                                  },
-                                ),
-                                Text(
-                                  "UNTIL",
-                                  style: TextStyle(color: Colors.white),
-                                )
-                              ],
+                          ? Padding(
+                              padding: EdgeInsets.only(
+                                  top: ScreenUtil().screenHeight * .036),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  IconButton(
+                                    icon: isPlusOrCloseButton
+                                        ? SvgPicture.asset(
+                                            "assets/icons/btn_plus.svg",
+                                          )
+                                        : SvgPicture.asset(
+                                            "assets/icons/btn_close.svg",
+                                          ),
+                                    onPressed: () {
+                                      _handleUntilButton();
+                                    },
+                                  ),
+                                  Text(
+                                    "UNTIL",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize:
+                                            ScreenUtil().screenWidth * .0289),
+                                  )
+                                ],
+                              ),
                             )
                           : SizedBox(),
 
@@ -465,8 +540,9 @@ class _PickDateState extends State<PickDate>
                         duration: Duration(milliseconds: 300),
                         child: isVisibleEndDayList
                             ? Container(
-                                margin: EdgeInsets.only(top: 40),
-                                height: 60,
+                                margin: EdgeInsets.only(
+                                    top: ScreenUtil().screenHeight * .073),
+                                height: ScreenUtil().screenHeight * .065,
                                 child: CustomScroll(
                                     inputText: endDayList,
                                     haveLinkingList: true,
@@ -509,7 +585,9 @@ class _PickDateState extends State<PickDate>
                         duration: Duration(milliseconds: 300),
                         child: isVisibleEndMonthList
                             ? Container(
-                                height: 60,
+                                margin: EdgeInsets.only(
+                                    top: ScreenUtil().screenHeight * .029),
+                                height: ScreenUtil().screenHeight * .065,
                                 child: CustomScroll(
                                   inputText: endMonthList,
                                   haveLinkingList: true,
@@ -547,7 +625,11 @@ class _PickDateState extends State<PickDate>
                                 duration: Duration(milliseconds: 300),
                                 child: isNewEndDay
                                     ? Container(
-                                        height: 60,
+                                        margin: EdgeInsets.only(
+                                            top: ScreenUtil().screenHeight *
+                                                .029),
+                                        height:
+                                            ScreenUtil().screenHeight * .065,
                                         child: CustomScroll(
                                             inputText: newDayHourList,
                                             key: endNewHourKey,
@@ -556,7 +638,11 @@ class _PickDateState extends State<PickDate>
                                               _focusEndHourIndex = index;
                                             }))
                                     : Container(
-                                        height: 60,
+                                        margin: EdgeInsets.only(
+                                            top: ScreenUtil().screenHeight *
+                                                .029),
+                                        height:
+                                            ScreenUtil().screenHeight * .065,
                                         child: CustomScroll(
                                             inputText: endHourList,
                                             key: endHourKey,
@@ -567,7 +653,7 @@ class _PickDateState extends State<PickDate>
                             : SizedBox(),
                       ),
                       Container(
-                        height: MediaQuery.of(context).size.height * .15,
+                        height: ScreenUtil().screenHeight * .152,
                       ),
                     ]),
                     Positioned(
@@ -580,49 +666,52 @@ class _PickDateState extends State<PickDate>
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: <Color>[
-                                Colors.black,
-                                Colors.black.withOpacity(.8),
-                                Colors.black.withOpacity(.4),
-                                Colors.transparent,
+                                Color(0xFF000000),
+                                Color.fromRGBO(0, 0, 0, 0.95),
+                                Color.fromRGBO(0, 0, 0, 0.85),
+                                Color.fromRGBO(0, 0, 0, 0.5),
+                                Color.fromRGBO(0, 0, 0, 0),
                               ],
                             ).createShader(bounds);
                           },
                           child: Container(
-                            height: MediaQuery.of(context).size.height * .13,
-                            color: Colors.black,
+                            height: ScreenUtil().screenHeight * .18,
+                            color: Colors.transparent,
                           ),
                           blendMode: BlendMode.dstATop,
                         )),
-                    Positioned(
-                        right: 0,
-                        left: 0,
-                        bottom: 0,
-                        child: ShaderMask(
-                          shaderCallback: (Rect bounds) {
-                            return LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: <Color>[
-                                Colors.transparent,
-                                Colors.black.withOpacity(.4),
-                                Colors.black.withOpacity(.8),
-                                Colors.black
-                              ],
-                            ).createShader(bounds);
-                          },
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * .15,
-                            color: Colors.black,
-                          ),
-                          blendMode: BlendMode.dstATop,
-                        )),
+                    isPlusOrCloseButton
+                        ? SizedBox()
+                        : Positioned(
+                            right: 0,
+                            left: 0,
+                            bottom: 0,
+                            child: ShaderMask(
+                              shaderCallback: (Rect bounds) {
+                                return LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: <Color>[
+                                    Color.fromRGBO(0, 0, 0, 0),
+                                    Color.fromRGBO(0, 0, 0, 0.55),
+                                    Color.fromRGBO(0, 0, 0, 0.85),
+                                    Color(0xFF000000)
+                                  ],
+                                ).createShader(bounds);
+                              },
+                              child: Container(
+                                height: ScreenUtil().screenHeight * .153,
+                                color: Colors.transparent,
+                              ),
+                              blendMode: BlendMode.dstATop,
+                            )),
                   ],
                 ),
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .2,
+              Container(
+                height: ScreenUtil().screenHeight * 0.193,
                 child: Align(
-                  alignment: Alignment.center,
+                  alignment: Alignment.topCenter,
                   child: GoArrowButton(
                     press: () {
                       _handleGoArrowButton();
@@ -644,7 +733,7 @@ class _PickDateState extends State<PickDate>
         IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Colors.grey.withOpacity(.6),
+            color: Color(0xFF5e5e5e),
           ),
           onPressed: () {
             if (isVisibleEndDayList) {
@@ -666,7 +755,7 @@ class _PickDateState extends State<PickDate>
         IconButton(
           icon: Icon(
             Icons.close,
-            color: Colors.grey.withOpacity(.6),
+            color: Color(0xFF5e5e5e),
           ),
           onPressed: () {},
         )
